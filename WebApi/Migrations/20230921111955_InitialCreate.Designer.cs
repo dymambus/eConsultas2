@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace WebApi.Migrations
 {
     [DbContext(typeof(ddContext))]
-    [Migration("20230920090228_InitialCreate")]
+    [Migration("20230921111955_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -125,8 +125,12 @@ namespace WebApi.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Phone")
-                        .HasColumnType("int");
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
@@ -153,14 +157,13 @@ namespace WebApi.Migrations
                     b.Property<int?>("PhotographId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Price")
+                    b.Property<int?>("Price")
                         .HasColumnType("int");
 
                     b.Property<string>("Region")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SpecializationName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasIndex("PhotographId");
