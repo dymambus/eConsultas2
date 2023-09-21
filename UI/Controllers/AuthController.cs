@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using UI.Models;
 
 namespace UI.Controllers
 {
@@ -44,7 +45,6 @@ namespace UI.Controllers
 
         private bool VerifyPassword(User user, string password)
         {
-
             return user.Password == password;
         }
 
@@ -81,9 +81,19 @@ namespace UI.Controllers
         public IActionResult Register(User userModel)
         {
 
-            return RedirectToAction("Index");
-        }
+            if (ModelState.IsValid)
+            {
 
+                _context.Users.Add(userModel);
+
+
+                _context.SaveChanges();
+
+                return RedirectToAction("Index");
+            }
+
+            return View(userModel);
+        }
         //
         //O que fiz aqui para baixo é um teste
         //
@@ -132,5 +142,87 @@ namespace UI.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+        [HttpGet]
+        public IActionResult RegisterPatientInfo()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult RegisterPatientInfo(PatientInfoViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var userEmail = HttpContext.Session.GetString("UserEmail");
+                var userRole = HttpContext.Session.GetInt32("UserRole");
+
+                if (!string.IsNullOrEmpty(userEmail) && userRole.HasValue)
+                {
+                    if (userRole == 0)
+                    {
+                        var patient = new Patient
+                        {
+                            Email = userEmail,
+                            Password = model.Password,
+                            RoleId = userRole.Value,
+                            Name = model.Name,
+                            Phone = model.Phone
+                        };
+                        _context.Patients.Add(patient);
+                    }
+                    _context.SaveChanges();
+
+                    return RedirectToAction("Login", "Auth");
+                }
+            }
+
+            return View(model);
+        }
+
+
+        [HttpGet]
+        public IActionResult RegisterDoctorInfo()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult RegisterDoctorInfo(DoctorInfoViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var userEmail = HttpContext.Session.GetString("UserEmail");
+                var userRole = HttpContext.Session.GetInt32("UserRole");
+
+                if (!string.IsNullOrEmpty(userEmail) && userRole.HasValue)
+                {
+                    if (userRole == 1)
+                    {
+                        var doctor = new Doctor
+                        {
+                            Name = model.Name,
+                            Phone = model.Phone,
+                            Email = userEmail,
+                            Password = model.Password,
+                            RoleId = userRole.Value,
+                            Region = model.Region,
+                            City = model.City,
+                            Address = model.Address,
+                            SpecializationName = model.SpecializationName,
+                            Price = model.Price,
+                        };
+                        _context.Doctors.Add(doctor);
+                    }
+                    _context.SaveChanges();
+
+                    return RedirectToAction("Login", "Auth");
+                }
+            }
+
+            return View(model);
+        }
+
+
+
     }
 }

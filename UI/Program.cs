@@ -10,6 +10,13 @@ builder.Services.AddControllersWithViews();
 //builder.Services.AddDbContext<ddContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Dmytro"), b => b.MigrationsAssembly("UI")));
 builder.Services.AddDbContext<ddContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectioneConsultas"), b => b.MigrationsAssembly("UI")));
 
+builder.Services.AddDistributedMemoryCache();
+
+// Adicione a configuração da sessão
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+});
 
 var app = builder.Build();
 
@@ -19,8 +26,11 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
 }
 app.UseStaticFiles();
-app.UseRouting();
 
+// Adicione o middleware de sessão
+app.UseSession();
+
+app.UseRouting();
 app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
