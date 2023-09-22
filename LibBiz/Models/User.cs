@@ -13,6 +13,7 @@ namespace LibBiz.Models
         public int RoleId { get; set; } // 0 - Pacient, 1 - Doctor, 2 - Admin
 
         [Required]
+        [EmailAddress]
         public string Email { get; set; }
         [Required]
         public string Password { get; set; }

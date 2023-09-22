@@ -42,6 +42,18 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
+        [Route("CreateDoctor_Parms")]
+        public void CreateDoctor(string email, string pwd)
+        {
+            Doctor doctor = new Doctor();
+            doctor.Email = email;
+            doctor.Password = pwd;
+            
+            CreateDoctor(doctor);
+        }
+
+
+        [HttpPost]
         [Route("CreatePatient")]
         public IActionResult CreatePatient(Patient patient)
         {
@@ -54,6 +66,18 @@ namespace WebApi.Controllers
             else
                 return NotFound();
         }
+
+        [HttpPost]
+        [Route("CreatePatient_Parms")]
+        public void CreatePatient(string user, string pwd)
+        {
+            Patient patient = new Patient();
+            patient.Email = user;
+            patient.Password = pwd;
+
+            CreatePatient(patient);
+        }
+
 
         [Authorize]
         [HttpDelete]

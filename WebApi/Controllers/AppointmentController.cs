@@ -26,11 +26,19 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAppointmentById(int id)
+        public IActionResult GetAppointmentsByDoctorId(int id)
         {
-            Appointment appointment = _BM.GetAppointmentById(id);
+            List<Appointment> appointment = _BM.GetAppointmentsByDoctorId(id);
             return Ok(appointment);
         }
+
+        [HttpGet]
+        public IActionResult GetAppointmentsByPatientId(int id)
+        {
+            List<Appointment> appointment = _BM.GetAppointmentsByPatientId(id);
+            return Ok(appointment);
+        }
+
 
         [HttpPost]
         public IActionResult CreateAppointment(int doctorId, int patientId, string patientMessage = null)

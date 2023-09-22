@@ -1,4 +1,5 @@
 ﻿using LibBiz.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,8 +48,10 @@ namespace LibBiz.Data
         public Doctor GetDoctorById(int id);
         public Patient UpdatePatient(Patient updatedPatient);
         public List<Appointment> GetAllAppointments();
-        public Appointment GetAppointmentById(int id);
         public Appointment CreateAppointment(int doctorId, int patientId, string patientMessage = null);
+
+        public List<Appointment> GetAppointmentsByPatientId(int userId);
+        public List<Appointment> GetAppointmentsByDoctorId(int userId);
     }
     public class BusinessMethodsImpl : BusinessMethods
     {
@@ -58,6 +61,28 @@ namespace LibBiz.Data
         {
             _context = context;
         }
+
+        public List<Appointment> GetAppointmentsByDoctorId(int userId)
+        {
+            var query = _context.Appointments
+                .Include(x => x.Doctor)
+                .Include(x => x.Patient)
+                .Where(x => x.Doctor.UserId == userId);
+
+            return query.ToList();
+        }
+
+        public List<Appointment> GetAppointmentsByPatientId(int userId)
+        {
+            var query = _context.Appointments
+                .Include(x => x.Doctor)
+                .Include(x => x.Patient)
+                .Where(x => x.Patient.UserId == userId);
+
+            return query.ToList();
+        }
+
+
 
         public List<string> GetAllSpecializations()
         {
@@ -124,17 +149,6 @@ namespace LibBiz.Data
             List<Appointment> appointments = _context.Appointments.ToList();
 
             return appointments;
-        }
-        public Appointment GetAppointmentById(int id)
-        {
-            Appointment appointment = _context.Appointments.Find(id);
-
-            if (appointment == null)
-            {
-                throw new Exception("Consulta não encontrada");
-            }
-
-            return appointment;
         }
         public Appointment CreateAppointment(int doctorId, int patientId, string? patientMessage = null)
         {

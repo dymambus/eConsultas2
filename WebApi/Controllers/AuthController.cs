@@ -22,9 +22,9 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login(string email)
+        public IActionResult Login(string email, string pwd)
         {
-            if (_context.Users.FirstOrDefault(u => u.Email == email) != null)
+            if (_context.Users.FirstOrDefault(u => u.Email == email && u.Password == pwd) != null)
             {
                 var token = GenerateJwtToken(email);
                 return Ok(new { token });
