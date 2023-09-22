@@ -47,7 +47,6 @@ namespace LibBiz.Data
         public List<Doctor> GetAllDoctors();
         public Doctor GetDoctorById(int id);
         public Patient UpdatePatient(Patient updatedPatient);
-        public List<Appointment> GetAllAppointments();
         public Appointment CreateAppointment(int doctorId, int patientId, string patientMessage = null);
 
         public List<Appointment> GetAppointmentsByPatientId(int userId);
@@ -144,12 +143,7 @@ namespace LibBiz.Data
 
             return updatedPatient;
         }
-        public List<Appointment> GetAllAppointments()
-        {
-            List<Appointment> appointments = _context.Appointments.ToList();
 
-            return appointments;
-        }
         public Appointment CreateAppointment(int doctorId, int patientId, string? patientMessage = null)
         {
             var doctor = _context.Doctors.Find(doctorId);

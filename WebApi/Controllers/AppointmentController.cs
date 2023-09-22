@@ -19,13 +19,6 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllAppointments()
-        {
-            List<Appointment> appointments = _BM.GetAllAppointments();
-            return Ok(appointments);
-        }
-
-        [HttpGet]
         public IActionResult GetAppointmentsByDoctorId(int id)
         {
             List<Appointment> appointment = _BM.GetAppointmentsByDoctorId(id);
