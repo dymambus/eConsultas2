@@ -1,0 +1,72 @@
+﻿@page
+
+@model LibBiz.Models.Doctor
+
+@section CustomCSS{
+    <link href="~/doctor/dashboard.css" rel="stylesheet" />
+}
+
+<partial name="_Header" />
+
+<div class="container-fluid">
+
+    <div class="row">
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+            <partial name="_Menu" />
+
+            <h2 class="m-3">Consultation Charges</h2>
+
+            @if (TempData.ContainsKey("Message"))
+            {
+                <div class="alert alert-danger" role="alert">
+
+                    @TempData["Message"]
+
+                </div>
+            }
+
+            <form method="post">
+
+                <div class="form-group mb-3">
+
+                    <label>Consultation Fees</label>
+
+                    @*  <input asp-for="Doctor.Fees" class="form-control" placeholder="Enter your fees" /> *@
+
+                    <small class="form-text text-muted">(the fees you charge per visit)</small>
+
+                </div>
+
+                <div class="form-group mb-3">
+
+                    @*         <label asp-for="Doctor.FeesNotes">Additional Info</label>
+
+                    <input asp-for="Doctor.FeesNotes" class="form-control" placeholder="Enter name"> *@
+
+                    <small class="form-text text-muted">(additional notes/discounts for customer)</small>
+
+                </div>
+
+                <button type="submit" class="mt-3 btn btn-primary">Update</button>
+
+            </form>
+
+        </main>
+
+        <partial name="_Footer" />
+
+    </div>
+</div>
+
+@section CustomJS{
+
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script>
+
+    <script src="~/doctor/dashboard.js"></script>
+}
+
+

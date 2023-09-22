@@ -1,5 +1,8 @@
 using LibBiz.Data;
 using Microsoft.EntityFrameworkCore;
+using UI.Controllers;
+using Microsoft.Extensions.Configuration;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +15,15 @@ builder.Services.AddDbContext<ddContext>(options => options.UseSqlServer(builder
 
 builder.Services.AddDistributedMemoryCache();
 
+builder.Services.AddScoped<Gateway>();
+
+builder.Services.AddScoped<BusinessMethods, BusinessMethodsImpl>();
+
+builder.Services.AddScoped<JwtService>(provider =>
+{
+    var jwtSecret = builder.Configuration["Jwt:Key"];
+    return new JwtService(jwtSecret);
+});
 // Adicione a configuração da sessão
 builder.Services.AddSession(options =>
 {
@@ -32,8 +44,9 @@ app.UseSession();
 
 app.UseRouting();
 app.UseAuthorization();
+
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Clinica}/{action=Index}/{id?}");
 
 app.Run();

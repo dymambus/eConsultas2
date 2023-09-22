@@ -1,0 +1,19 @@
+﻿@page
+
+@model LibBiz.Models.Doctor
+
+<div class="container">
+
+    <main>
+
+        <partial name="_Header" />
+
+        <h2>Consultation with (Dr.)@* @Model.Consultation.Doctor.Name *@</h2>
+
+        @* <partial name="_Consultation" for="Consultation" /> *@
+
+    </main>
+
+    <partial name="_Footer" />
+
+</div>

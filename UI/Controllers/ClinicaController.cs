@@ -4,13 +4,13 @@ using UI.Models;
 
 namespace UI.Controllers
 {
-    public class HomeController : Controller
+    public class ClinicaController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<ClinicaController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public ClinicaController(ILogger<ClinicaController> logger)
         {
-            _logger = logger;
+            _logger=logger;
         }
 
         public IActionResult Index()
@@ -27,6 +27,12 @@ namespace UI.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpGet]
+        public IActionResult DoctorDashboard()
+        {
+            return View();
         }
     }
 }
