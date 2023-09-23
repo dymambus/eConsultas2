@@ -40,7 +40,7 @@ namespace LibBiz.Data
 
     }
 
-    public interface BusinessMethods
+    public interface IBusinessMethods
     {
         public List<string> GetAllSpecializations();
         public Doctor UpdateDoctor(Doctor updatedDoctor);
@@ -52,7 +52,8 @@ namespace LibBiz.Data
         public List<Appointment> GetAppointmentsByPatientId(int userId);
         public List<Appointment> GetAppointmentsByDoctorId(int userId);
     }
-    public class BusinessMethodsImpl : BusinessMethods
+
+    public class BusinessMethodsImpl : IBusinessMethods
     {
         private readonly ddContext _context;
 
@@ -61,6 +62,7 @@ namespace LibBiz.Data
             _context = context;
         }
 
+        // Appointments
         public List<Appointment> GetAppointmentsByDoctorId(int userId)
         {
             var query = _context.Appointments

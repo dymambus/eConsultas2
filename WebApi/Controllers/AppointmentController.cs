@@ -11,8 +11,8 @@ namespace WebApi.Controllers
     public class AppointmentController : ControllerBase
     {
         private ILogger<AppointmentController> _logger;
-        private BusinessMethods _BM;
-        public AppointmentController(ILogger<AppointmentController> logger, BusinessMethods BM)
+        private IBusinessMethods _BM;
+        public AppointmentController(ILogger<AppointmentController> logger, IBusinessMethods BM)
         {
             _logger = logger;
             _BM = BM;

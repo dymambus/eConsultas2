@@ -25,7 +25,7 @@ builder.Services.AddDbContext<ddContext>(options => options.UseSqlServer(builder
 //builder.Services.AddDbContext<ddContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectioneConsultas"), b => b.MigrationsAssembly("WebApi")));
 
 builder.Services.AddScoped<Gateway>();
-builder.Services.AddScoped<BusinessMethods, BusinessMethodsImpl>();
+builder.Services.AddScoped<IBusinessMethods, BusinessMethodsImpl>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {

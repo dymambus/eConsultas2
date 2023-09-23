@@ -16,9 +16,9 @@ namespace WebApi.Controllers
     {
 
         private ILogger<DoctorsController> _logger;
-        private BusinessMethods _BM;
+        private IBusinessMethods _BM;
 
-        public DoctorsController(ILogger<DoctorsController> logger, BusinessMethods BM)
+        public DoctorsController(ILogger<DoctorsController> logger, IBusinessMethods BM)
         {
             _logger = logger;
             _BM = BM;
