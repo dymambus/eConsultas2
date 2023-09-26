@@ -14,12 +14,11 @@ namespace UI.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly ddContext _context;
-        private readonly JwtService _jwtService;
-        public AuthController(IConfiguration configuration, ddContext context, JwtService jwtService)
+        public AuthController(IConfiguration configuration, ddContext context)
         {
             _configuration = configuration;
             _context = context;
-            _jwtService = jwtService;
+
         }
 
         [HttpGet]
@@ -37,15 +36,15 @@ namespace UI.Controllers
             {
                 var token = GenerateJwtToken(user);
 
-                var userClaims = _jwtService.DecodeJwtToken(token);
-
                 if (user.RoleId == 0) // Paciente
                 {
+                    HttpContext.Session.SetString("Token", token);
                     // Redirecionar para o Dashboard do Paciente
                     return RedirectToAction("PatientDashboard", "Patient");
                 }
                 else if (user.RoleId == 1) // Médico
                 {
+                    HttpContext.Session.SetString("Token", token);
                     // Redirecionar para o Dashboard do Médico
                     return RedirectToAction("DoctorDashboard", "Doctor");
                 }
@@ -67,8 +66,8 @@ namespace UI.Controllers
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.Email),
-                new Claim("Nome", user.Name) // Certifique-se de que a propriedade "Nome" está preenchida corretamente no objeto User
+                new Claim(ClaimTypes.Name, user.Email)
+
             };
             var token = new JwtSecurityToken(
                 _configuration["Jwt:Issuer"],
@@ -229,40 +228,5 @@ namespace UI.Controllers
         }
 
 
-    }
-    public class JwtService
-    {
-        private readonly string _jwtSecret;
-
-        public JwtService(string jwtSecret)
-        {
-            _jwtSecret = jwtSecret;
-        }
-
-        public ClaimsPrincipal DecodeJwtToken(string token)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_jwtSecret);
-
-            tokenHandler.ValidateToken(token, new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = false, // Seu token não tem informações de issuer (emissor)
-                ValidateAudience = false, // Seu token não tem informações de audience (audiência)
-                ValidateLifetime = true,
-                ClockSkew = TimeSpan.Zero // Isso é opcional, define a tolerância para a validade do token
-            }, out SecurityToken validatedToken);
-
-            return (ClaimsPrincipal)tokenHandler.ValidateToken(token, new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = false, // Seu token não tem informações de issuer (emissor)
-                ValidateAudience = false, // Seu token não tem informações de audience (audiência)
-                ValidateLifetime = true,
-                ClockSkew = TimeSpan.Zero // Isso é opcional, define a tolerância para a validade do token
-            }, out validatedToken);
-        }
     }
 }

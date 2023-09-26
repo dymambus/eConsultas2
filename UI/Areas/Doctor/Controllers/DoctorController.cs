@@ -1,6 +1,9 @@
 ﻿using LibBiz.Data;
 using LibBiz.Models;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Common;
+using System.Net.Http.Headers;
+using System.Net.Http;
 using UI.Controllers;
 
 namespace UI.Areas.Doctor.Controllers
@@ -9,13 +12,15 @@ namespace UI.Areas.Doctor.Controllers
     {
         private ILogger<DoctorController> _logger;
         private IBusinessMethods _BM;
-        //private JwtService _jwtService;
-        public DoctorController(ILogger<DoctorController> logger, IBusinessMethods BM/*, JwtService jwtService*/)
+        private readonly HttpClient _client;
+        public DoctorController(ILogger<DoctorController> logger, IBusinessMethods BM)
         {
             _BM = BM;
             _logger = logger;
-            //_jwtService = jwtService;
+            _client = new HttpClient();
+            _client.BaseAddress = new Uri("https://localhost:44364/api/");
         }
+
 
         public IActionResult Index()
         {
@@ -25,26 +30,24 @@ namespace UI.Areas.Doctor.Controllers
         [HttpGet]
         public IActionResult DoctorDashboard()
         {
-            return View();
-
+            var token = HttpContext.Session.GetString("Token");
+            if (token == null)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+            else
+            {
+                return View();
+            }
         }
         [HttpGet]
         public IActionResult DoctorProfile()
         {
-            // Recupere o token JWT do cabeçalho da solicitação
-            //var token = HttpContext.Request.Headers["Authorization"].ToString();
-
-            // Decodifique o token JWT para obter informações do usuário
-            //var userInfo = _jwtService.DecodeJwtToken(token);
-
-            // Envie as informações do usuário para a visualização
-            //ViewData["UserInfo"] = userInfo;
+            var token = HttpContext.Session.GetString("Token");
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             return View();
         }
-
-
-
 
         [HttpGet]
         public IActionResult DoctorSpecialization()

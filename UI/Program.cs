@@ -19,11 +19,6 @@ builder.Services.AddScoped<Gateway>();
 
 builder.Services.AddScoped<IBusinessMethods, BusinessMethodsImpl>();
 
-builder.Services.AddScoped<JwtService>(provider =>
-{
-    var jwtSecret = builder.Configuration["Jwt:Key"];
-    return new JwtService(jwtSecret);
-});
 // Adicione a configuração da sessão
 builder.Services.AddSession(options =>
 {
