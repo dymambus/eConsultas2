@@ -17,7 +17,7 @@ builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddScoped<Gateway>();
 
-builder.Services.AddScoped<BusinessMethods, BusinessMethodsImpl>();
+builder.Services.AddScoped<IBusinessMethods, BusinessMethodsImpl>();
 
 builder.Services.AddScoped<JwtService>(provider =>
 {

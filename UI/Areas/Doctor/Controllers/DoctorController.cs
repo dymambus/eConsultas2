@@ -8,9 +8,9 @@ namespace UI.Areas.Doctor.Controllers
     public class DoctorController : Controller
     {
         private ILogger<DoctorController> _logger;
-        private BusinessMethods _BM;
+        private IBusinessMethods _BM;
         //private JwtService _jwtService;
-        public DoctorController(ILogger<DoctorController> logger, BusinessMethods BM/*, JwtService jwtService*/)
+        public DoctorController(ILogger<DoctorController> logger, IBusinessMethods BM/*, JwtService jwtService*/)
         {
             _BM = BM;
             _logger = logger;
