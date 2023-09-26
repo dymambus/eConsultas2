@@ -22,7 +22,7 @@ builder.Services.AddScoped<IBusinessMethods, BusinessMethodsImpl>();
 // Adicione a configuração da sessão
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.IdleTimeout = TimeSpan.FromMinutes(1);
 });
 
 var app = builder.Build();
