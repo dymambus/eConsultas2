@@ -1,20 +1,47 @@
 ﻿@{
-    ViewData["Title"] = "Login";
+    Layout = null;
 }
 
-<h1>Login</h1>
+<link href="~/css/signin.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/eConsultasMVC.styles.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/starter-template.css" asp-append-version="true" />
 
-<form asp-action="Login" method="post">
-    <div class="form-group">
-        <label for="email">Email:</label>
-        <input type="email" class="form-control" id="email" name="email" required>
-    </div>
-    <div class="form-group">
-        <label for="password">Senha:</label>
-        <input type="password" class="form-control" id="password" name="password" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Entrar</button>
-</form>
+<div class="text-center w-100">
+    <main class="form-signin">
+        <form asp-action="Login" method="post">
+            <h1 class="h3 mb-3 fw-normal">Please log in</h1>
+            
+            <div class="form-floating mb-3">
+                <input type="email" class="form-control" id="email" name="email" placeholder="name@@example.com" required>
+                <label for="email">Email:</label>
+            </div>
 
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" id="password" name="password" placeholder="name@@example.com" required>
+                <label for="password">Password:</label>
+            </div>
 
-<a asp-controller="Home" asp-action="Index" class="btn btn-secondary mt-3">Voltar à Página Inicial</a>
+            <div class="checkbox mb-3">
+                <label>
+                    <input type="checkbox" /> Remember me
+                </label>
+            </div>
+
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+
+            <div class="mt-1">
+
+                <a asp-action="Register" class="btn btn-primary btn-lg px-4">Register</a>
+
+                <a asp-controller="LandingPage" asp-action="Index" class="btn btn-primary btn-lg px-4">Home</a>
+
+            </div>
+
+            <p class="mt-2 mb-3 text-muted">&copy; 2023</p>
+        </form>
+    </main>
+</div>

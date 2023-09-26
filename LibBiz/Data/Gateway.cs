@@ -19,9 +19,17 @@ namespace LibBiz.Data
 
         public T CreateUser<T>(T user) where T : User
         {
-            _context.Users.Add(user);
+            if (user.GetType() == typeof(Doctor)) 
+            { 
+                Doctor doctor = new Doctor { Email = user.Email , Password = user.Password, RoleId = user.RoleId };
+                _context.Users.Add(doctor);
+            }
+            else if (user.GetType() == typeof(Patient))
+            {
+                Patient patient = new Patient { Email = user.Email, Password = user.Password, RoleId = user.RoleId };
+                _context.Users.Add(patient);
+            }
             _context.SaveChanges();
-
             return user;
         }
 

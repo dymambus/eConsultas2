@@ -14,11 +14,15 @@ namespace UI.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly ddContext _context;
-        public AuthController(IConfiguration configuration, ddContext context)
+        private readonly Gateway _gateway;
+        private readonly ILogger<AuthController> _logger;
+
+        public AuthController(IConfiguration configuration, ddContext context, Gateway gateway, ILogger<AuthController> logger)
         {
             _configuration = configuration;
             _context = context;
-
+            _gateway = gateway;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -80,152 +84,223 @@ namespace UI.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-
         [HttpGet]
         public IActionResult Register()
         {
-            var userModel = new User();
-            return View(userModel);
+            return View();
         }
 
         [HttpPost]
         public IActionResult Register(User userModel)
         {
-
             if (ModelState.IsValid)
             {
-
-                _context.Users.Add(userModel);
-
-
-                _context.SaveChanges();
-
-                return RedirectToAction("Index");
-            }
-
-            return View(userModel);
-        }
-        //
-        //O que fiz aqui para baixo é um teste
-        //
-        [HttpGet]
-        public IActionResult RegisterEmail()
-        {
-            return View();
-        }
-        [HttpPost]
-        public IActionResult RegisterEmail(UserEmailViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                HttpContext.Session.SetString("UserEmail", model.Email);
-                HttpContext.Session.SetInt32("UserRole", model.RoleId);
-
-                return RedirectToAction("RegisterAdditionalInfo");
-            }
-
-            return View(model);
-        }
-        [HttpGet]
-        public IActionResult RegisterAdditionalInfo()
-        {
-
-            int? userRole = HttpContext.Session.GetInt32("UserRole");
-
-            if (userRole == null)
-            {
-
-                return RedirectToAction("Index", "Home");
-            }
-
-
-            if (userRole == 0)
-            {
-
-                return View("RegisterPatientInfo");
-            }
-            else if (userRole == 1)
-            {
-                return View("RegisterDoctorInfo");
-            }
-
-            return RedirectToAction("Index", "Home");
-        }
-        [HttpGet]
-        public IActionResult RegisterPatientInfo()
-        {
-            return View();
-        }
-        [HttpPost]
-        public IActionResult RegisterPatientInfo(PatientInfoViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var userEmail = HttpContext.Session.GetString("UserEmail");
-                var userRole = HttpContext.Session.GetInt32("UserRole");
-
-                if (!string.IsNullOrEmpty(userEmail) && userRole.HasValue)
+                if (userModel.RoleId == 1)
                 {
-                    if (userRole == 0)
+                    Doctor doctor = new()
                     {
-                        var patient = new Patient
-                        {
-                            Email = userEmail,
-                            Password = model.Password,
-                            RoleId = userRole.Value,
-                            Name = model.Name,
-                            Phone = model.Phone
-                        };
-                        _context.Patients.Add(patient);
-                    }
-                    _context.SaveChanges();
+                        Email = userModel.Email,
+                        Password = userModel.Password,
+                    };
+                    var result = CreateDoctor(doctor);
 
-                    return RedirectToAction("Login", "Auth");
+                    if (result != null)
+                    {
+                        _logger.LogCritical("Doctor created.");
+                        return Ok(result);
+                    }
+                }
+                else if (userModel.RoleId == 0)
+                {
+                    Patient patient = new()
+                    {
+                        Email = userModel.Email,
+                        Password = userModel.Password,
+                    };
+                    var result = CreatePatient(patient);
+
+                    if (result != null)
+                    {
+                        return Ok(result);
+                    }
                 }
             }
 
-            return View(model);
+            return NotFound();
         }
-        [HttpGet]
-        public IActionResult RegisterDoctorInfo()
-        {
-            return View();
-        }
+
         [HttpPost]
-        public IActionResult RegisterDoctorInfo(DoctorInfoViewModel model)
+        public IActionResult CreateDoctor(Doctor doctor)
         {
             if (ModelState.IsValid)
             {
-                var userEmail = HttpContext.Session.GetString("UserEmail");
-                var userRole = HttpContext.Session.GetInt32("UserRole");
+                doctor.RoleId = 1;
 
-                if (!string.IsNullOrEmpty(userEmail) && userRole.HasValue)
-                {
-                    if (userRole == 1)
-                    {
-                        var doctor = new LibBiz.Models.Doctor
-                        {
-                            Name = model.Name,
-                            Phone = model.Phone,
-                            Email = userEmail,
-                            Password = model.Password,
-                            RoleId = userRole.Value,
-                            Region = model.Region,
-                            City = model.City,
-                            Address = model.Address,
-                            SpecializationName = model.SpecializationName,
-                            Price = model.Price,
-                        };
-                        _context.Doctors.Add(doctor);
-                    }
-                    _context.SaveChanges();
-
-                    return RedirectToAction("Login", "Auth");
-                }
+                _logger.LogCritical("Doctor created.");
+                return Ok(_gateway.CreateUser<Doctor>(doctor));
             }
-
-            return View(model);
+            else
+                return NotFound();
         }
+
+        [HttpPost]
+        public IActionResult CreatePatient(Patient patient)
+        {
+            if (ModelState.IsValid)
+            {
+                patient.RoleId = 0;
+
+                return Ok(_gateway.CreateUser<Patient>(patient));
+            }
+            else
+                return NotFound();
+        }
+
+        //[HttpPost]
+        //public IActionResult Register<T>(T user) where T : User
+        //{
+        //    var userModel = new User();
+        //    return View(userModel);
+        //}
+
+        //[HttpPost]
+        //public IActionResult Register(User userModel)
+        //{
+
+        //    if (ModelState.IsValid)
+        //    {
+
+        //        _context.Users.Add(userModel);
+
+
+        //        _context.SaveChanges();
+
+        //        return RedirectToAction("Index");
+        //    }
+
+        //    return View(userModel);
+        //}
+        ////
+        ////O que fiz aqui para baixo é um teste
+        ////
+        //[HttpGet]
+        //public IActionResult RegisterEmail()
+        //{
+        //    return View();
+        //}
+        //[HttpPost]
+        //public IActionResult RegisterEmail(UserEmailViewModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        HttpContext.Session.SetString("UserEmail", model.Email);
+        //        HttpContext.Session.SetInt32("UserRole", model.RoleId);
+
+        //        return RedirectToAction("RegisterAdditionalInfo");
+        //    }
+
+        //    return View(model);
+        //}
+        //[HttpGet]
+        //public IActionResult RegisterAdditionalInfo()
+        //{
+
+        //    int? userRole = HttpContext.Session.GetInt32("UserRole");
+
+        //    if (userRole == null)
+        //    {
+
+        //        return RedirectToAction("Index", "Home");
+        //    }
+
+
+        //    if (userRole == 0)
+        //    {
+
+        //        return View("RegisterPatientInfo");
+        //    }
+        //    else if (userRole == 1)
+        //    {
+        //        return View("RegisterDoctorInfo");
+        //    }
+
+        //    return RedirectToAction("Index", "Home");
+        //}
+        //[HttpGet]
+        //public IActionResult RegisterPatientInfo()
+        //{
+        //    return View();
+        //}
+        //[HttpPost]
+        //public IActionResult RegisterPatientInfo(PatientInfoViewModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var userEmail = HttpContext.Session.GetString("UserEmail");
+        //        var userRole = HttpContext.Session.GetInt32("UserRole");
+
+        //        if (!string.IsNullOrEmpty(userEmail) && userRole.HasValue)
+        //        {
+        //            if (userRole == 0)
+        //            {
+        //                var patient = new Patient
+        //                {
+        //                    Email = userEmail,
+        //                    Password = model.Password,
+        //                    RoleId = userRole.Value,
+        //                    Name = model.Name,
+        //                    Phone = model.Phone
+        //                };
+        //                _context.Patients.Add(patient);
+        //            }
+        //            _context.SaveChanges();
+
+        //            return RedirectToAction("Login", "Auth");
+        //        }
+        //    }
+
+        //    return View(model);
+        //}
+        //[HttpGet]
+        //public IActionResult RegisterDoctorInfo()
+        //{
+        //    return View();
+        //}
+        //[HttpPost]
+        //public IActionResult RegisterDoctorInfo(DoctorInfoViewModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var userEmail = HttpContext.Session.GetString("UserEmail");
+        //        var userRole = HttpContext.Session.GetInt32("UserRole");
+
+        //        if (!string.IsNullOrEmpty(userEmail) && userRole.HasValue)
+        //        {
+        //            if (userRole == 1)
+        //            {
+        //                var doctor = new LibBiz.Models.Doctor
+        //                {
+        //                    Name = model.Name,
+        //                    Phone = model.Phone,
+        //                    Email = userEmail,
+        //                    Password = model.Password,
+        //                    RoleId = userRole.Value,
+        //                    Region = model.Region,
+        //                    City = model.City,
+        //                    Address = model.Address,
+        //                    SpecializationName = model.SpecializationName,
+        //                    Price = model.Price,
+        //                };
+        //                _context.Doctors.Add(doctor);
+        //            }
+        //            _context.SaveChanges();
+
+        //            return RedirectToAction("Login", "Auth");
+        //        }
+        //    }
+
+        //    return View(model);
+        //}
 
 
     }

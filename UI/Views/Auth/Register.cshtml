@@ -1,9 +1,13 @@
 ﻿@model LibBiz.Models.User
 @{
-    ViewData["Title"] = "Register";
+    Layout = null;
 }
 
-<h1>Registo</h1>
+<link href="~/css/signin.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/eConsultasMVC.styles.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/starter-template.css" asp-append-version="true" />
 
 <div class="text-center w-100">
     <main class="form-signin">
@@ -11,29 +15,62 @@
             <h1 class="h3 mb-3 fw-normal">Please register</h1>
 
             <div class="form-floating mb-3">
-                <input asp-for="Email" type="text" class="form-control" placeholder="name@example.com">
-                <label asp-for="Email">Email address</label>
+                <input asp-for="Email" type="email" class="form-control" placeholder="name@example.com">
+                <label asp-for="Email">Email address:</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Password" type="password" class="form-control" placeholder="password">
+                <label asp-for="Email">Password:</label>
             </div>
 
             <div class="mb-3">
-                <input asp-for="RoleId" value="1" class="form-check-input" type="radio" checked>
-                <label class="RoleId" asp-for="RoleId">I am a Doctor</label>
+                <input asp-for="RoleId" value="1" class="form-check-input" type="radio" id="doctorRadio" checked>
+                <label class="form-check-label" asp-for="RoleId">I am a Doctor</label>
             </div>
 
             <div>
-                <input asp-for="RoleId" value="0" class="form-check-input" type="radio">
-                <label class="RoleId" asp-for="RoleId">I am a Patient</label>
+                <input asp-for="RoleId" value="0" class="form-check-input" type="radio" id="patientRadio">
+                <label class="form-check-label" asp-for="RoleId">I am a Patient</label>
             </div>
-
-
 
             <div asp-validation-summary="All" class="text-danger"></div>
 
-            <button class="btn btn-primary" type="submit">Register</button>
+            <button class="w-100 btn btn-lg btn-primary" type="submit">Register</button>
 
+            <a asp-controller="LandingPage" asp-action="Index" class="btn btn-primary btn-lg mt-3 w-100">Back to Home</a>
+
+            <p class="mt-2 mb-3 text-muted">&copy; 2023</p>
         </form>
-
     </main>
-
 </div>
-<a asp-controller="Home" asp-action="Index" class="btn btn-secondary mt-3">Voltar à Página Inicial</a>
+
+@* <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get references to the radio buttons and the form
+        const doctorRadio = document.getElementById("doctorRadio");
+        const patientRadio = document.getElementById("patientRadio");
+        const registrationForm = document.querySelector("form");
+
+        // Function to update the form action
+        function updateFormAction(isDoctor) {
+            if (isDoctor) {
+                registrationForm.action = "@Url.Action("CreateDoctor", "Auth")";
+            } else {
+                registrationForm.action = "@Url.Action("CreatePatient", "Auth")";
+            }
+        }
+
+        // Initial update based on the default radio button state
+        updateFormAction(doctorRadio.checked);
+
+        // Add event listeners to the radio buttons
+        doctorRadio.addEventListener("change", function () {
+            updateFormAction(this.checked);
+        });
+
+        patientRadio.addEventListener("change", function () {
+            updateFormAction(!this.checked);
+        });
+    });
+</script> *@
