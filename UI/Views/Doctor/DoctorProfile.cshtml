@@ -1,5 +1,4 @@
-﻿@page
-@model LibBiz.Models.User
+﻿@model DoctorInfoViewModel
 
 @section CustomCSS{
     <link href="~/doctor/dashboard.css" rel="stylesheet" />
@@ -15,75 +14,39 @@
 
             <partial name="_Menu" />
 
-            <h2 class="m-3">
-
-                My Profile
-
-                @* @if (!String.IsNullOrEmpty(Model.ProfilePicture))
-                {
-                <img class="rounded img-fluid d-block m-3"
-                src="@Model.ProfilePicture"
-                width="90" />
-                } *@
-
-            </h2>
+            <h2 class="m-3">My Profile</h2>
 
             @if (TempData.ContainsKey("Message"))
             {
                 <div class="alert alert-danger" role="alert">
-
                     @TempData["Message"]
-
                 </div>
             }
 
+            @if (Model != null)
+            {
+                <p>FUUUUUUDeuUUUUUU</p>
+            }
+
             <form method="post">
-
                 <div class="form-group mb-3">
-
-                <label asp-for="Name">Name</label>
-
-                <input asp-for="Name" class="form-control" placeholder="Enter name">
-
-                <small class="form-text text-muted">(your name as shown to your customer)</small>
-
+                    <label>Name</label>
+                    <input asp-for="Name" class="form-control" placeholder="Enter name">
+                    <small class="form-text text-muted">(your name as shown to your customer)</small>
                 </div>
-
-                @*  <div class="form-group mb-3">
-
-                <label asp-for="Phone">Phone</label>
-
-                <input asp-for="Phone" class="form-control" placeholder="Enter contact phone">
-
-                <small class="form-text text-muted">(your phone as shown to your customer)</small>
-
-                </div> *@
-
+                <div class="form-group mb-3">
+                    <label>Phone</label>
+                    <input asp-for="Phone" class="form-control" placeholder="Enter contact phone">
+                    <small class="form-text text-muted">(your phone as shown to your customer)</small>
+                </div>
+                <!-- Restante das propriedades do DoctorInfoViewModel -->
                 <button type="submit" class="mt-3 btn btn-primary">Update</button>
-
             </form>
 
-            <h2 class="m-3">Profile Picture</h2>
+            <!-- Adicione o código para exibir outras informações do médico aqui -->
 
-            <form enctype="multipart/form-data" method="post">
 
-                <div class="form-group mb-3">
-
-                    <label for="filePic">Name</label>
-
-                    <input name="filePic" class="form-control" type="file" />
-
-                    <small class="form-text text-muted">(< 1 MB PNG file, 3x4)</small>
-
-                </div>
-
-                <button asp-page-handler="Upload" type="submit" class="mt-3 btn btn-primary">Update</button>
-
-            </form>
-
-        </main>
-
-        <partial name="_Footer" />
+            <partial name="_Footer" />
 
     </div>
 </div>

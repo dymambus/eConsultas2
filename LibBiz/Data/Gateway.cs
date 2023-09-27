@@ -11,12 +11,10 @@ namespace LibBiz.Data
     public class Gateway
     {
         private readonly ddContext _context;
-
         public Gateway(ddContext context)
         {
             _context = context;
         }
-
         public T CreateUser<T>(T user) where T : User
         {
             _context.Users.Add(user);
@@ -24,20 +22,16 @@ namespace LibBiz.Data
 
             return user;
         }
-
         public List<User> GetUsers()
         {
             return _context.Users.ToList();
         }
-
         public void DeleteUser(int id)
         {
             var user = _context.Users.Find(id);
             _context.Users.Remove(user);
             _context.SaveChanges();
         }
-
-
     }
 
     public interface IBusinessMethods
@@ -48,7 +42,7 @@ namespace LibBiz.Data
         public Doctor GetDoctorById(int id);
         public Patient UpdatePatient(Patient updatedPatient);
         public Appointment CreateAppointment(int doctorId, int patientId, string patientMessage = null);
-
+        public Doctor GetDoctorByEmail(string email);
         public List<Appointment> GetAppointmentsByPatientId(int userId);
         public List<Appointment> GetAppointmentsByDoctorId(int userId);
     }
@@ -56,13 +50,10 @@ namespace LibBiz.Data
     public class BusinessMethodsImpl : IBusinessMethods
     {
         private readonly ddContext _context;
-
         public BusinessMethodsImpl(ddContext context)
         {
             _context = context;
         }
-
-        // Appointments
         public List<Appointment> GetAppointmentsByDoctorId(int userId)
         {
             var query = _context.Appointments
@@ -72,7 +63,6 @@ namespace LibBiz.Data
 
             return query.ToList();
         }
-
         public List<Appointment> GetAppointmentsByPatientId(int userId)
         {
             var query = _context.Appointments
@@ -82,9 +72,6 @@ namespace LibBiz.Data
 
             return query.ToList();
         }
-
-
-
         public List<string> GetAllSpecializations()
         {
             List<string> specializations = _context.Doctors
@@ -109,6 +96,13 @@ namespace LibBiz.Data
                 throw new Exception("Médico não encontrado");
             }
 
+            return doctor;
+        }
+        public Doctor GetDoctorByEmail(string email)
+        {
+            Doctor doctor = _context.Doctors
+                .Where(x => x.Email == email)
+                .FirstOrDefault();
             return doctor;
         }
         public Doctor UpdateDoctor(Doctor updatedDoctor)
@@ -145,7 +139,6 @@ namespace LibBiz.Data
 
             return updatedPatient;
         }
-
         public Appointment CreateAppointment(int doctorId, int patientId, string? patientMessage = null)
         {
             var doctor = _context.Doctors.Find(doctorId);
