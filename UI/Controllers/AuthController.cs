@@ -44,7 +44,7 @@ namespace UI.Controllers
                 {
                     HttpContext.Session.SetString("Token", token);
                     // Redirecionar para o Dashboard do Paciente
-                    return RedirectToAction("PatientDashboard", "Patient");
+                    return RedirectToAction("Index", "Patient");
                 }
                 else if (user.RoleId == 1) // Médico
                 {
