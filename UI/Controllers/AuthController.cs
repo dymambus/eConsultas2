@@ -43,13 +43,15 @@ namespace UI.Controllers
                 if (user.RoleId == 0) // Paciente
                 {
                     HttpContext.Session.SetString("Token", token);
-                    // Redirecionar para o Dashboard do Paciente
+                    HttpContext.Session.SetString("Email", email);
+
                     return RedirectToAction("Index", "Patient");
                 }
                 else if (user.RoleId == 1) // Médico
                 {
                     HttpContext.Session.SetString("Token", token);
-                    // Redirecionar para o Dashboard do Médico
+                    HttpContext.Session.SetString("Email", email);
+
                     return RedirectToAction("DoctorDashboard", "Doctor");
                 }
             }
