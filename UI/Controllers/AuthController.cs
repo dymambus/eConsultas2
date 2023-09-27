@@ -204,26 +204,6 @@ namespace UI.Controllers
             return View(userModel);
         }
 
-
-
-        [HttpGet]
-        public IActionResult RegisterEmail()
-        {
-            return View();
-        }
-        [HttpPost]
-        public IActionResult RegisterEmail(UserEmailViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                HttpContext.Session.SetString("UserEmail", model.Email);
-                HttpContext.Session.SetInt32("UserRole", model.RoleId);
-
-                return RedirectToAction("RegisterAdditionalInfo");
-            }
-
-            return View(model);
-        }
         [HttpGet]
         public IActionResult RegisterAdditionalInfo()
         {
