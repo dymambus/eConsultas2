@@ -97,32 +97,36 @@ namespace UI.Controllers
             {
                 if (userModel.RoleId == 1)
                 {
-                    Doctor doctor = new()
-                    {
-                        Email = userModel.Email,
-                        Password = userModel.Password,
-                    };
-                    var result = CreateDoctor(doctor);
+                    return View("RegisterDoctorInfo");
 
-                    if (result != null)
-                    {
-                        _logger.LogCritical("Doctor created.");
-                        return Ok(result);
-                    }
+                    //Doctor doctor = new()
+                    //{
+                    //    Email = userModel.Email,
+                    //    Password = userModel.Password,
+                    //};
+                    //var result = CreateDoctor(doctor);
+
+                    //if (result != null)
+                    //{
+                    //    _logger.LogCritical("Doctor created.");
+                    //    return Ok(result);
+                    //}
                 }
                 else if (userModel.RoleId == 0)
                 {
-                    Patient patient = new()
-                    {
-                        Email = userModel.Email,
-                        Password = userModel.Password,
-                    };
-                    var result = CreatePatient(patient);
+                    return View("RegisterPatientInfo");
+                    
+                    //Patient patient = new()
+                    //{
+                    //    Email = userModel.Email,
+                    //    Password = userModel.Password,
+                    //};
+                    //var result = CreatePatient(patient);
 
-                    if (result != null)
-                    {
-                        return Ok(result);
-                    }
+                    //if (result != null)
+                    //{
+                    //    return Ok(result);
+                    //}
                 }
             }
 

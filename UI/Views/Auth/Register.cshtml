@@ -44,33 +44,3 @@
         </form>
     </main>
 </div>
-
-@* <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Get references to the radio buttons and the form
-        const doctorRadio = document.getElementById("doctorRadio");
-        const patientRadio = document.getElementById("patientRadio");
-        const registrationForm = document.querySelector("form");
-
-        // Function to update the form action
-        function updateFormAction(isDoctor) {
-            if (isDoctor) {
-                registrationForm.action = "@Url.Action("CreateDoctor", "Auth")";
-            } else {
-                registrationForm.action = "@Url.Action("CreatePatient", "Auth")";
-            }
-        }
-
-        // Initial update based on the default radio button state
-        updateFormAction(doctorRadio.checked);
-
-        // Add event listeners to the radio buttons
-        doctorRadio.addEventListener("change", function () {
-            updateFormAction(this.checked);
-        });
-
-        patientRadio.addEventListener("change", function () {
-            updateFormAction(!this.checked);
-        });
-    });
-</script> *@

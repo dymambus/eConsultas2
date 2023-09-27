@@ -1,23 +1,32 @@
 ﻿@model LibBiz.Models.Patient
-
 @{
-    ViewData["Title"] = "Register Patient Information";
+    Layout = null;
 }
 
-<h1>Register Patient Information</h1>
+<link href="~/css/signin.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/eConsultasMVC.styles.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/starter-template.css" asp-append-version="true" />
 
-<form asp-action="RegisterPatientInfo" method="post">
-    <div class="form-group">
-        <label asp-for="Password">Password:</label>
-        <input type="password" class="form-control" asp-for="Password" required>
-    </div>
-    <div class="form-group">
-        <label asp-for="Name">Name:</label>
-        <input type="text" class="form-control" asp-for="Name" required>
-    </div>
-    <div class="form-group">
-        <label asp-for="Phone">Phone:</label>
-        <input type="text" class="form-control" asp-for="Phone" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Register</button>
-</form>
+<div class="text-center w-100">
+    <main class="form-signin">
+        <form asp-action="RegisterPatientInfo" method="post">
+            <h1 class="h3 mb-3 fw-normal">Register Patient Information</h1>
+
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" asp-for="Password" required>
+                <label asp-for="Password">Password:</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" asp-for="Name" required>
+                <label asp-for="Name">Name:</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" asp-for="Phone" required>
+                <label asp-for="Phone">Phone:</label>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg mt-3 w-100y">Register</button>
+        </form>
+    </main>
+</div>
