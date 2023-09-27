@@ -45,7 +45,7 @@ namespace UI.Areas.Doctor.Controllers
 
                 if (doctor != null)
                 {
-                    var doctorViewModel = new DoctorInfoViewModel
+                    var user = new LibBiz.Models.Doctor()
                     {
                         // Preencha as propriedades de DoctorInfoViewModel com os dados do médico
                         Name = doctor.Name,
@@ -59,7 +59,7 @@ namespace UI.Areas.Doctor.Controllers
                     };
 
                     // Renderize a página DoctorProfile com as informações do médico
-                    return View(doctorViewModel); // Certifique-se de que está direcionando para a ação correta
+                    return View(user); // Certifique-se de que está direcionando para a ação correta
                 }
                 else
                 {
@@ -85,7 +85,7 @@ namespace UI.Areas.Doctor.Controllers
 
                 if (doctor != null)
                 {
-                    var doctorViewModel = new DoctorInfoViewModel
+                    var user = new LibBiz.Models.Doctor()
                     {
                         // Preencha as propriedades de DoctorInfoViewModel com os dados do médico
                         Name = doctor.Name,
@@ -99,7 +99,7 @@ namespace UI.Areas.Doctor.Controllers
                     };
 
                     // Renderize a página DoctorProfile com as informações do médico
-                    return View(doctorViewModel);
+                    return View(user);
                 }
                 else
                 {
@@ -125,7 +125,7 @@ namespace UI.Areas.Doctor.Controllers
 
                 if (doctor != null)
                 {
-                    var doctorViewModel = new DoctorInfoViewModel
+                    var user = new LibBiz.Models.Doctor()
                     {
                         // Preencha as propriedades de DoctorInfoViewModel com os dados do médico
                         Name = doctor.Name,
@@ -139,7 +139,7 @@ namespace UI.Areas.Doctor.Controllers
                     };
 
                     // Renderize a página DoctorProfile com as informações do médico
-                    return View(doctorViewModel); // Certifique-se de que está direcionando para a ação correta
+                    return View(user); // Certifique-se de que está direcionando para a ação correta
                 }
                 else
                 {
@@ -165,7 +165,7 @@ namespace UI.Areas.Doctor.Controllers
 
                 if (doctor != null)
                 {
-                    var doctorViewModel = new DoctorInfoViewModel
+                    var user = new LibBiz.Models.Doctor()
                     {
                         // Preencha as propriedades de DoctorInfoViewModel com os dados do médico
                         Name = doctor.Name,
@@ -179,7 +179,7 @@ namespace UI.Areas.Doctor.Controllers
                     };
 
                     // Renderize a página DoctorProfile com as informações do médico
-                    return View(doctorViewModel); // Certifique-se de que está direcionando para a ação correta
+                    return View(user); // Certifique-se de que está direcionando para a ação correta
                 }
                 else
                 {
@@ -205,7 +205,7 @@ namespace UI.Areas.Doctor.Controllers
 
                 if (doctor != null)
                 {
-                    var doctorViewModel = new DoctorInfoViewModel
+                    var user = new LibBiz.Models.Doctor()
                     {
                         // Preencha as propriedades de DoctorInfoViewModel com os dados do médico
                         Name = doctor.Name,
@@ -219,7 +219,7 @@ namespace UI.Areas.Doctor.Controllers
                     };
 
                     // Renderize a página DoctorProfile com as informações do médico
-                    return View(doctorViewModel); // Certifique-se de que está direcionando para a ação correta
+                    return View(user); // Certifique-se de que está direcionando para a ação correta
                 }
                 else
                 {
