@@ -11,14 +11,14 @@
 
 <div class="text-center w-100">
     <main class="form-signin">
-        <form asp-action="RegisterDoctorInfo" method="post" enctype="multipart/form-data">
+        <form asp-asp-controller="Auth" asp-action="SaveDoctor" method="post" enctype="multipart/form-data">
+            <input hidden asp-for="@Model.Email" />
+            <input hidden asp-for="@Model.Password" />
+            <input hidden asp-for="@Model.RoleId"/>
+            
             <h1 class="h3 mb-3 fw-normal">Register Doctor Information</h1>
             
-            <div class="form-floating mb-3">
-                <input type="password" class="form-control" asp-for="Password" required>
-                <label asp-for="Password">Password:</label>
-            </div>
-            <div class="form-floating mb-3">
+           <div class="form-floating mb-3">
                 <input type="text" class="form-control" asp-for="Name" required>
                 <label asp-for="Name">Name:</label>
             </div>
@@ -46,10 +46,12 @@
                 <input type="number" class="form-control" asp-for="Price">
                 <label asp-for="Price">Price:</label>
             </div>
+
             <div class="form-floating mb-3">
                 <input type="file" class="form-control-file" id="photo" name="Photo">
                 <label for="photo">Upload a Photo:</label>
             </div>
+
             <button type="submit" class="btn btn-primary btn-lg mt-3 w-100y">Register</button>
         </form>
 

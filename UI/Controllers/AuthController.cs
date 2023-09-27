@@ -97,36 +97,25 @@ namespace UI.Controllers
             {
                 if (userModel.RoleId == 1)
                 {
-                    return View("RegisterDoctorInfo");
+                    Doctor doctor = new()
+                    {
+                        Email = userModel.Email,
+                        Password = userModel.Password,
+                        RoleId = userModel.RoleId
+                    };
 
-                    //Doctor doctor = new()
-                    //{
-                    //    Email = userModel.Email,
-                    //    Password = userModel.Password,
-                    //};
-                    //var result = CreateDoctor(doctor);
-
-                    //if (result != null)
-                    //{
-                    //    _logger.LogCritical("Doctor created.");
-                    //    return Ok(result);
-                    //}
+                    return RedirectToAction("RegisterDoctorInfo", doctor);
                 }
                 else if (userModel.RoleId == 0)
                 {
-                    return View("RegisterPatientInfo");
-                    
-                    //Patient patient = new()
-                    //{
-                    //    Email = userModel.Email,
-                    //    Password = userModel.Password,
-                    //};
-                    //var result = CreatePatient(patient);
 
-                    //if (result != null)
-                    //{
-                    //    return Ok(result);
-                    //}
+                    Patient patient = new()
+                    {
+                        Email = userModel.Email,
+                        Password = userModel.Password,
+                    };
+
+                    return RedirectToAction("RegisterPatientInfo", patient);
                 }
             }
 
@@ -160,76 +149,106 @@ namespace UI.Controllers
                 return NotFound();
         }
 
-        //[HttpPost]
-        //public IActionResult Register<T>(T user) where T : User
-        //{
-        //    var userModel = new User();
-        //    return View(userModel);
-        //}
+        [HttpPost]
+        public IActionResult Register<T>(T user) where T : User
+        {
+            var userModel = new User();
+            return View(userModel);
+        }
 
-        //[HttpPost]
-        //public IActionResult Register(User userModel)
-        //{
+        [HttpGet]
+        public IActionResult RegisterDoctorInfo(Doctor doctor)
+        {
+            return View(doctor);
+        }
 
-        //    if (ModelState.IsValid)
-        //    {
+        [HttpPost]
+        public IActionResult SaveDoctor(Doctor userModel)
+        {
 
-        //        _context.Users.Add(userModel);
+            if (ModelState.IsValid)
+            {
 
-
-        //        _context.SaveChanges();
-
-        //        return RedirectToAction("Index");
-        //    }
-
-        //    return View(userModel);
-        //}
-        ////
-        ////O que fiz aqui para baixo é um teste
-        ////
-        //[HttpGet]
-        //public IActionResult RegisterEmail()
-        //{
-        //    return View();
-        //}
-        //[HttpPost]
-        //public IActionResult RegisterEmail(UserEmailViewModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        HttpContext.Session.SetString("UserEmail", model.Email);
-        //        HttpContext.Session.SetInt32("UserRole", model.RoleId);
-
-        //        return RedirectToAction("RegisterAdditionalInfo");
-        //    }
-
-        //    return View(model);
-        //}
-        //[HttpGet]
-        //public IActionResult RegisterAdditionalInfo()
-        //{
-
-        //    int? userRole = HttpContext.Session.GetInt32("UserRole");
-
-        //    if (userRole == null)
-        //    {
-
-        //        return RedirectToAction("Index", "Home");
-        //    }
+                _context.Users.Add(userModel);
 
 
-        //    if (userRole == 0)
-        //    {
+                _context.SaveChanges();
 
-        //        return View("RegisterPatientInfo");
-        //    }
-        //    else if (userRole == 1)
-        //    {
-        //        return View("RegisterDoctorInfo");
-        //    }
+                return RedirectToAction("Login");
+            }
 
-        //    return RedirectToAction("Index", "Home");
-        //}
+            return View(userModel);
+        }
+
+        [HttpGet]
+        public IActionResult RegisterPatientInfo(Patient patient)
+        {
+            return View(patient);
+        }
+
+        [HttpPost]
+        public IActionResult SavePatient(Patient userModel)
+        {
+
+            if (ModelState.IsValid)
+            {
+
+                _context.Users.Add(userModel);
+
+
+                _context.SaveChanges();
+
+                return RedirectToAction("Index");
+            }
+
+            return View(userModel);
+        }
+
+
+
+        [HttpGet]
+        public IActionResult RegisterEmail()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult RegisterEmail(UserEmailViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                HttpContext.Session.SetString("UserEmail", model.Email);
+                HttpContext.Session.SetInt32("UserRole", model.RoleId);
+
+                return RedirectToAction("RegisterAdditionalInfo");
+            }
+
+            return View(model);
+        }
+        [HttpGet]
+        public IActionResult RegisterAdditionalInfo()
+        {
+
+            int? userRole = HttpContext.Session.GetInt32("UserRole");
+
+            if (userRole == null)
+            {
+
+                return RedirectToAction("Index", "Home");
+            }
+
+
+            if (userRole == 0)
+            {
+
+                return View("RegisterPatientInfo");
+            }
+            else if (userRole == 1)
+            {
+                return View("RegisterDoctorInfo");
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
         //[HttpGet]
         //public IActionResult RegisterPatientInfo()
         //{
