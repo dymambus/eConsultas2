@@ -5,6 +5,10 @@ using NuGet.Common;
 using System.Net.Http.Headers;
 using System.Net.Http;
 using UI.Controllers;
+using System.Net;
+using UI.Models;
+using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore;
 
 namespace UI.Areas.Doctor.Controllers
 {
@@ -20,13 +24,10 @@ namespace UI.Areas.Doctor.Controllers
             _client = new HttpClient();
             _client.BaseAddress = new Uri("https://localhost:44364/api/");
         }
-
-
         public IActionResult Index()
         {
             return View();
         }
-
         [HttpGet]
         public IActionResult DoctorDashboard()
         {
@@ -37,34 +38,194 @@ namespace UI.Areas.Doctor.Controllers
             }
             else
             {
-                return View();
+                var userEmail = HttpContext.Session.GetString("Email");
+
+                // Consulte o banco de dados para obter as informações do médico com base no email
+                var doctor = _BM.GetDoctorByEmail(userEmail);
+
+                if (doctor != null)
+                {
+                    var doctorViewModel = new DoctorInfoViewModel
+                    {
+                        // Preencha as propriedades de DoctorInfoViewModel com os dados do médico
+                        Name = doctor.Name,
+                        Email = userEmail,
+                        Phone = doctor.Phone,
+                        Address = doctor.Address,
+                        Region = doctor.Region,
+                        City = doctor.City,
+                        SpecializationName = doctor.SpecializationName,
+                        Price = (int)doctor.Price
+                    };
+
+                    // Renderize a página DoctorProfile com as informações do médico
+                    return View(doctorViewModel); // Certifique-se de que está direcionando para a ação correta
+                }
+                else
+                {
+                    return RedirectToAction("Error", "Home");
+                }
             }
         }
         [HttpGet]
         public IActionResult DoctorProfile()
         {
             var token = HttpContext.Session.GetString("Token");
-            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            if (token == null)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+            else
+            {
+                // Obtenha o email do médico logado (você pode armazená-lo na sessão ou de outra forma)
+                var userEmail = HttpContext.Session.GetString("Email");
 
-            return View();
+                // Consulte o banco de dados para obter as informações do médico com base no email
+                var doctor = _BM.GetDoctorByEmail(userEmail);
+
+                if (doctor != null)
+                {
+                    var doctorViewModel = new DoctorInfoViewModel
+                    {
+                        // Preencha as propriedades de DoctorInfoViewModel com os dados do médico
+                        Name = doctor.Name,
+                        Email = userEmail,
+                        Phone = doctor.Phone,
+                        Address = doctor.Address,
+                        Region = doctor.Region,
+                        City = doctor.City,
+                        SpecializationName = doctor.SpecializationName,
+                        Price = (int)doctor.Price
+                    };
+
+                    // Renderize a página DoctorProfile com as informações do médico
+                    return View(doctorViewModel);
+                }
+                else
+                {
+                    // O médico não foi encontrado no banco de dados
+                    return RedirectToAction("Error", "Home");
+                }
+            }
         }
-
         [HttpGet]
         public IActionResult DoctorSpecialization()
         {
-            return View();
+            var token = HttpContext.Session.GetString("Token");
+            if (token == null)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+            else
+            {
+                var userEmail = HttpContext.Session.GetString("Email");
+
+                // Consulte o banco de dados para obter as informações do médico com base no email
+                var doctor = _BM.GetDoctorByEmail(userEmail);
+
+                if (doctor != null)
+                {
+                    var doctorViewModel = new DoctorInfoViewModel
+                    {
+                        // Preencha as propriedades de DoctorInfoViewModel com os dados do médico
+                        Name = doctor.Name,
+                        Email = userEmail,
+                        Phone = doctor.Phone,
+                        Address = doctor.Address,
+                        Region = doctor.Region,
+                        City = doctor.City,
+                        SpecializationName = doctor.SpecializationName,
+                        Price = (int)doctor.Price
+                    };
+
+                    // Renderize a página DoctorProfile com as informações do médico
+                    return View(doctorViewModel); // Certifique-se de que está direcionando para a ação correta
+                }
+                else
+                {
+                    return RedirectToAction("Error", "Home");
+                }
+            }
 
         }
         [HttpGet]
         public IActionResult DoctorClinic()
         {
-            return View();
+            var token = HttpContext.Session.GetString("Token");
+            if (token == null)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+            else
+            {
+                var userEmail = HttpContext.Session.GetString("Email");
+
+                // Consulte o banco de dados para obter as informações do médico com base no email
+                var doctor = _BM.GetDoctorByEmail(userEmail);
+
+                if (doctor != null)
+                {
+                    var doctorViewModel = new DoctorInfoViewModel
+                    {
+                        // Preencha as propriedades de DoctorInfoViewModel com os dados do médico
+                        Name = doctor.Name,
+                        Email = userEmail,
+                        Phone = doctor.Phone,
+                        Address = doctor.Address,
+                        Region = doctor.Region,
+                        City = doctor.City,
+                        SpecializationName = doctor.SpecializationName,
+                        Price = (int)doctor.Price
+                    };
+
+                    // Renderize a página DoctorProfile com as informações do médico
+                    return View(doctorViewModel); // Certifique-se de que está direcionando para a ação correta
+                }
+                else
+                {
+                    return RedirectToAction("Error", "Home");
+                }
+            }
 
         }
         [HttpGet]
         public IActionResult DoctorFees()
         {
-            return View();
+            var token = HttpContext.Session.GetString("Token");
+            if (token == null)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+            else
+            {
+                var userEmail = HttpContext.Session.GetString("Email");
+
+                // Consulte o banco de dados para obter as informações do médico com base no email
+                var doctor = _BM.GetDoctorByEmail(userEmail);
+
+                if (doctor != null)
+                {
+                    var doctorViewModel = new DoctorInfoViewModel
+                    {
+                        // Preencha as propriedades de DoctorInfoViewModel com os dados do médico
+                        Name = doctor.Name,
+                        Email = userEmail,
+                        Phone = doctor.Phone,
+                        Address = doctor.Address,
+                        Region = doctor.Region,
+                        City = doctor.City,
+                        SpecializationName = doctor.SpecializationName,
+                        Price = (int)doctor.Price
+                    };
+
+                    // Renderize a página DoctorProfile com as informações do médico
+                    return View(doctorViewModel); // Certifique-se de que está direcionando para a ação correta
+                }
+                else
+                {
+                    return RedirectToAction("Error", "Home");
+                }
+            }
 
         }
 
@@ -101,5 +262,6 @@ namespace UI.Areas.Doctor.Controllers
             LibBiz.Models.Patient patient = _BM.UpdatePatient(updatedPatient);
             return Ok(patient);
         }
+
     }
 }
