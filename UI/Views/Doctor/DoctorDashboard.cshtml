@@ -1,6 +1,4 @@
-﻿@page
-
-@model UI.Models.DoctorInfoViewModel
+﻿@model UI.Models.DoctorInfoViewModel
 
 @section CustomCSS{
 
@@ -18,7 +16,7 @@
 
             <partial name="_Menu" />
 
-            <h2>Bem vindo Dr. @User.FindFirst("Nome")</h2>
+            <h2>Bem vindo Dr. @Model.Name</h2>
 
 
         </main>

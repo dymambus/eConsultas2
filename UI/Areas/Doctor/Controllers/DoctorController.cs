@@ -24,14 +24,10 @@ namespace UI.Areas.Doctor.Controllers
             _client = new HttpClient();
             _client.BaseAddress = new Uri("https://localhost:44364/api/");
         }
-
-
         public IActionResult Index()
         {
             return View();
         }
-
-
         [HttpGet]
         public IActionResult DoctorDashboard()
         {
@@ -53,6 +49,7 @@ namespace UI.Areas.Doctor.Controllers
                     {
                         // Preencha as propriedades de DoctorInfoViewModel com os dados do médico
                         Name = doctor.Name,
+                        Email = userEmail,
                         Phone = doctor.Phone,
                         Address = doctor.Address,
                         Region = doctor.Region,
@@ -70,8 +67,6 @@ namespace UI.Areas.Doctor.Controllers
                 }
             }
         }
-
-
         [HttpGet]
         public IActionResult DoctorProfile()
         {
@@ -94,8 +89,9 @@ namespace UI.Areas.Doctor.Controllers
                     {
                         // Preencha as propriedades de DoctorInfoViewModel com os dados do médico
                         Name = doctor.Name,
+                        Email = userEmail,
                         Phone = doctor.Phone,
-
+                        Address = doctor.Address,
                         Region = doctor.Region,
                         City = doctor.City,
                         SpecializationName = doctor.SpecializationName,
@@ -112,27 +108,124 @@ namespace UI.Areas.Doctor.Controllers
                 }
             }
         }
-
-
-
-
-
         [HttpGet]
         public IActionResult DoctorSpecialization()
         {
-            return View();
+            var token = HttpContext.Session.GetString("Token");
+            if (token == null)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+            else
+            {
+                var userEmail = HttpContext.Session.GetString("Email");
+
+                // Consulte o banco de dados para obter as informações do médico com base no email
+                var doctor = _BM.GetDoctorByEmail(userEmail);
+
+                if (doctor != null)
+                {
+                    var doctorViewModel = new DoctorInfoViewModel
+                    {
+                        // Preencha as propriedades de DoctorInfoViewModel com os dados do médico
+                        Name = doctor.Name,
+                        Email = userEmail,
+                        Phone = doctor.Phone,
+                        Address = doctor.Address,
+                        Region = doctor.Region,
+                        City = doctor.City,
+                        SpecializationName = doctor.SpecializationName,
+                        Price = (int)doctor.Price
+                    };
+
+                    // Renderize a página DoctorProfile com as informações do médico
+                    return View(doctorViewModel); // Certifique-se de que está direcionando para a ação correta
+                }
+                else
+                {
+                    return RedirectToAction("Error", "Home");
+                }
+            }
 
         }
         [HttpGet]
         public IActionResult DoctorClinic()
         {
-            return View();
+            var token = HttpContext.Session.GetString("Token");
+            if (token == null)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+            else
+            {
+                var userEmail = HttpContext.Session.GetString("Email");
+
+                // Consulte o banco de dados para obter as informações do médico com base no email
+                var doctor = _BM.GetDoctorByEmail(userEmail);
+
+                if (doctor != null)
+                {
+                    var doctorViewModel = new DoctorInfoViewModel
+                    {
+                        // Preencha as propriedades de DoctorInfoViewModel com os dados do médico
+                        Name = doctor.Name,
+                        Email = userEmail,
+                        Phone = doctor.Phone,
+                        Address = doctor.Address,
+                        Region = doctor.Region,
+                        City = doctor.City,
+                        SpecializationName = doctor.SpecializationName,
+                        Price = (int)doctor.Price
+                    };
+
+                    // Renderize a página DoctorProfile com as informações do médico
+                    return View(doctorViewModel); // Certifique-se de que está direcionando para a ação correta
+                }
+                else
+                {
+                    return RedirectToAction("Error", "Home");
+                }
+            }
 
         }
         [HttpGet]
         public IActionResult DoctorFees()
         {
-            return View();
+            var token = HttpContext.Session.GetString("Token");
+            if (token == null)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+            else
+            {
+                var userEmail = HttpContext.Session.GetString("Email");
+
+                // Consulte o banco de dados para obter as informações do médico com base no email
+                var doctor = _BM.GetDoctorByEmail(userEmail);
+
+                if (doctor != null)
+                {
+                    var doctorViewModel = new DoctorInfoViewModel
+                    {
+                        // Preencha as propriedades de DoctorInfoViewModel com os dados do médico
+                        Name = doctor.Name,
+                        Email = userEmail,
+                        Phone = doctor.Phone,
+                        Address = doctor.Address,
+                        Region = doctor.Region,
+                        City = doctor.City,
+                        SpecializationName = doctor.SpecializationName,
+                        Price = (int)doctor.Price
+                    };
+
+                    // Renderize a página DoctorProfile com as informações do médico
+                    return View(doctorViewModel); // Certifique-se de que está direcionando para a ação correta
+                }
+                else
+                {
+                    return RedirectToAction("Error", "Home");
+                }
+            }
 
         }
 
