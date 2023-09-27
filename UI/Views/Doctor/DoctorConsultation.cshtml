@@ -1,6 +1,4 @@
-﻿@page
-
-@model LibBiz.Models.Doctor
+﻿@model LibBiz.Models.Doctor
 
 <div class="container">
 
@@ -8,9 +6,9 @@
 
         <partial name="_Header" />
 
-        <h2>Consultation with (Dr.)@* @Model.Consultation.Doctor.Name *@</h2>
+        <h2>Consultation with (Dr.)@Model.Name</h2>
 
-        @* <partial name="_Consultation" for="Consultation" /> *@
+
 
     </main>
 
