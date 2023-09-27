@@ -1,6 +1,4 @@
-﻿@page
-
-@model LibBiz.Models.Doctor
+﻿@model LibBiz.Models.Doctor
 
 @section CustomCSS{
 
@@ -30,18 +28,10 @@
             }
 
             <form method="post">
-
-                @*  <partial name="_SpecializationCode" for="Doctor.SpecializationCode" /> *@
-
                 <div class="form-group mb-3">
-
-                    B
-
-                    <small class="form-text text-muted">(explain your specialization)</small>
-
+                    <label>Specialization</label>
+                    <input asp-for="SpecializationName" class="form-control">
                 </div>
-
-
                 <button type="submit" class="mt-3 btn btn-primary">Update</button>
 
             </form>
