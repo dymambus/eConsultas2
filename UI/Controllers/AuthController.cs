@@ -172,7 +172,7 @@ namespace UI.Controllers
                 // Verifique se uma foto foi enviada
                 if (doctor.Photo != null && doctor.Photo.Length > 0)
                 {
-                    // Leia os dados da imagem em um byte array
+
                     byte[] imageData;
                     using (var stream = new MemoryStream())
                     {
@@ -180,21 +180,18 @@ namespace UI.Controllers
                         imageData = stream.ToArray();
                     }
 
-                    // Salve o byte array de imagem em algum lugar ou armazene-o no banco de dados, como mencionado anteriormente
+                    _context.Users.Add(doctor);
 
-                    // Restante do código para salvar o médico no banco de dados
-                    // ...
+                    _context.SaveChanges();
+
+                    return RedirectToAction("Login");
                 }
                 else
                 {
-                    // Nenhum arquivo de imagem foi enviado, você pode lidar com isso de acordo com suas necessidades
+
                 }
 
-                // Restante do código para salvar o médico no banco de dados
-                // ...
             }
-
-            // Se ocorrerem erros de validação, volte ao formulário de registro
             return View("DoctorRegistration", doctor);
         }
 
