@@ -16,9 +16,6 @@ namespace LibBiz.Models
         public string? Address { get; set; }
         public string? SpecializationName { get; set; }
         public int? Price { get; set; }
-
-        [NotMapped] // Isso indica que essa propriedade não é mapeada para o banco de dados
-        public IFormFile Photo { get; set; }
         public Photograph? Photograph { get; set; }
     }
 }

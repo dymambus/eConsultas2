@@ -163,38 +163,41 @@ namespace UI.Controllers
         {
             return View(doctor);
         }
-
         [HttpPost]
-        public IActionResult SaveDoctor(Doctor doctor)
+        public IActionResult SaveDoctorInfo(Doctor userModel, IFormFile filePhoto)
         {
             if (ModelState.IsValid)
             {
-                // Verifique se uma foto foi enviada
-                if (doctor.Photo != null && doctor.Photo.Length > 0)
+                if (filePhoto != null && filePhoto.Length > 0)
                 {
-
-                    byte[] imageData;
-                    using (var stream = new MemoryStream())
+                    // Processar a foto aqui e armazená-la na tabela Photographs
+                    var photograph = new Photograph
                     {
-                        doctor.Photo.CopyTo(stream);
-                        imageData = stream.ToArray();
+                        ImageData = new byte[filePhoto.Length]
+                    };
+
+                    using (var stream = filePhoto.OpenReadStream())
+                    {
+                        stream.Read(photograph.ImageData, 0, (int)filePhoto.Length);
                     }
 
-                    _context.Users.Add(doctor);
-
+                    // Salvar a foto no banco de dados
+                    _context.Photographs.Add(photograph);
                     _context.SaveChanges();
 
-                    return RedirectToAction("Login");
-                }
-                else
-                {
-
+                    // Associar a foto ao médico
+                    userModel.Photograph = photograph;
                 }
 
+                userModel.RoleId = 1; // Defina o RoleId para médico
+                _context.Users.Add(userModel);
+                _context.SaveChanges();
+
+                return RedirectToAction("Login");
             }
-            return View("DoctorRegistration", doctor);
-        }
 
+            return View(userModel);
+        }
 
 
         [HttpGet]
@@ -245,60 +248,6 @@ namespace UI.Controllers
             }
 
             return RedirectToAction("Index", "Home");
-        }
-
-
-        [HttpPost]
-        public IActionResult UploadPhoto(IFormFile filePhoto)
-        {
-            if (filePhoto != null && filePhoto.Length > 0)
-            {
-                // Verifique se o arquivo é uma imagem (opcional)
-                if (IsImageFile(filePhoto))
-                {
-                    // Leia os dados da imagem em um byte array
-                    byte[] imageData;
-                    using (var stream = new MemoryStream())
-                    {
-                        filePhoto.CopyTo(stream);
-                        imageData = stream.ToArray();
-                    }
-
-                    // Crie um novo objeto Photograph e defina os dados da imagem
-                    var photograph = new Photograph
-                    {
-                        ImageData = imageData
-                    };
-
-                    // Adicione o objeto Photograph ao contexto do banco de dados e salve as alterações
-                    _context.Photographs.Add(photograph);
-                    _context.SaveChanges();
-
-                    return RedirectToAction("Success"); // Redirecionar para uma página de sucesso
-                }
-                else
-                {
-                    // O arquivo não é uma imagem válida
-                    TempData["Message"] = "Por favor, selecione uma imagem válida (jpg, jpeg, ou png).";
-                    return RedirectToAction("Error"); // Redirecionar para uma página de erro
-                }
-            }
-            else
-            {
-                // Nenhum arquivo foi enviado
-                TempData["Message"] = "Por favor, selecione um arquivo para fazer upload.";
-                return RedirectToAction("Error"); // Redirecionar para uma página de erro
-            }
-        }
-
-
-
-        private bool IsImageFile(IFormFile file)
-        {
-            // Verifique se a extensão do arquivo corresponde a uma imagem
-            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
-            var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
-            return allowedExtensions.Contains(fileExtension);
         }
 
     }
