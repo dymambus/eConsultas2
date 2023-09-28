@@ -8,7 +8,8 @@ namespace LibBiz.Models
 {
     public class Photograph
     {
-        public int PhotographId { get; set; }
-        public byte[] ImageData { get; set; }
+        public int Id { get; set; } // Identificador único da foto
+        public byte[] ImageData { get; set; } // Dados binários da imagem
+        
     }
 }

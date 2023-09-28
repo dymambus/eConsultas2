@@ -45,6 +45,8 @@ namespace UI.Areas.Doctor.Controllers
                     var user = new LibBiz.Models.Doctor()
                     {
                         // Preencha as propriedades de DoctorInfoViewModel com os dados do médico
+                        UserId = doctor.UserId,
+                        RoleId = doctor.RoleId,
                         Name = doctor.Name,
                         Email = userEmail,
                         Phone = doctor.Phone,
@@ -64,6 +66,7 @@ namespace UI.Areas.Doctor.Controllers
                 }
             }
         }
+
         [HttpGet]
         public IActionResult DoctorProfile()
         {
@@ -105,6 +108,7 @@ namespace UI.Areas.Doctor.Controllers
                 }
             }
         }
+
         [HttpGet]
         public IActionResult DoctorSpecialization()
         {
@@ -145,6 +149,7 @@ namespace UI.Areas.Doctor.Controllers
             }
 
         }
+
         [HttpGet]
         public IActionResult DoctorClinic()
         {
@@ -185,6 +190,7 @@ namespace UI.Areas.Doctor.Controllers
             }
 
         }
+
         [HttpGet]
         public IActionResult DoctorFees()
         {
@@ -253,11 +259,31 @@ namespace UI.Areas.Doctor.Controllers
             LibBiz.Models.Doctor doctor = _BM.GetDoctorById(id);
             return Ok(doctor);
         }
-        [HttpPut]
-        public IActionResult UpdatePatient(LibBiz.Models.Patient updatedPatient)
+
+        
+        [HttpPost]
+        public IActionResult UploadProfilePicture(int doctorId, IFormFile profilePicture)
         {
-            LibBiz.Models.Patient patient = _BM.UpdatePatient(updatedPatient);
-            return Ok(patient);
+            // Recupere o médico do banco de dados com base no ID ou na sessão
+            var doctor = _BM.GetDoctorById(doctorId);
+
+            if (doctor != null && profilePicture != null && profilePicture.Length > 0)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    profilePicture.CopyTo(ms);
+                    doctor.Photograph = new Photograph
+                    {
+                        ImageData = ms.ToArray()
+                    };
+                }
+
+                // Atualize o médico no banco de dados para incluir a foto
+
+                return RedirectToAction("DoctorProfile");
+            }
+
+            return RedirectToAction("DoctorProfile"); // Trate os casos de erro adequadamente
         }
 
     }

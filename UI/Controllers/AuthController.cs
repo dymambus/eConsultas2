@@ -163,34 +163,17 @@ namespace UI.Controllers
         {
             return View(doctor);
         }
+
         [HttpPost]
-        public IActionResult SaveDoctorInfo(Doctor userModel, IFormFile filePhoto)
+        public IActionResult SaveDoctor(Doctor userModel)
         {
+
             if (ModelState.IsValid)
             {
-                if (filePhoto != null && filePhoto.Length > 0)
-                {
-                    // Processar a foto aqui e armazená-la na tabela Photographs
-                    var photograph = new Photograph
-                    {
-                        ImageData = new byte[filePhoto.Length]
-                    };
 
-                    using (var stream = filePhoto.OpenReadStream())
-                    {
-                        stream.Read(photograph.ImageData, 0, (int)filePhoto.Length);
-                    }
-
-                    // Salvar a foto no banco de dados
-                    _context.Photographs.Add(photograph);
-                    _context.SaveChanges();
-
-                    // Associar a foto ao médico
-                    userModel.Photograph = photograph;
-                }
-
-                userModel.RoleId = 1; // Defina o RoleId para médico
                 _context.Users.Add(userModel);
+
+
                 _context.SaveChanges();
 
                 return RedirectToAction("Login");
@@ -198,7 +181,6 @@ namespace UI.Controllers
 
             return View(userModel);
         }
-
 
         [HttpGet]
         public IActionResult RegisterPatientInfo(Patient patient)
@@ -249,6 +231,8 @@ namespace UI.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+
 
     }
 }
