@@ -2,16 +2,23 @@ using LibBiz.Data;
 using Microsoft.EntityFrameworkCore;
 using UI.Controllers;
 using Microsoft.Extensions.Configuration;
-
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Logging
+var logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger();
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
 // Mudar connection string
-builder.Services.AddDbContext<ddContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Dmytro"), b => b.MigrationsAssembly("UI")));
-//builder.Services.AddDbContext<ddContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectioneConsultas"), b => b.MigrationsAssembly("UI")));
+//builder.Services.AddDbContext<ddContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Dmytro"), b => b.MigrationsAssembly("UI")));
+builder.Services.AddDbContext<ddContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectioneConsultas"), b => b.MigrationsAssembly("UI")));
 
 builder.Services.AddDistributedMemoryCache();
 
@@ -22,7 +29,7 @@ builder.Services.AddScoped<IBusinessMethods, BusinessMethodsImpl>();
 // Adicione a configuração da sessão
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(1);
+    options.IdleTimeout = TimeSpan.FromMinutes(20);
 });
 
 var app = builder.Build();

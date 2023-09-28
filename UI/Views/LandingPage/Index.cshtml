@@ -9,27 +9,14 @@
 <link rel="stylesheet" href="~/css/starter-template.css" asp-append-version="true" />
 
 <div class="col-lg-8 mx-auto p-3 py-md-5">
-
-    <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
-
-        <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
-
-            <span class="fs-4">eConsultas</span>
-
-        </a>
-
-    </header>
-
     <main>
-        <div class="mb-5">
+        <h1>Bem Vindos ao eConsultas</h1>
+        <p class="fs-5 col-md-8">De forma a conseguir aceder a toda a informação, terá que fazer o</p>
+        <a asp-controller="Auth" asp-action="Login" class="btn btn-primary btn-lg px-4">Login</a>
 
-            <a asp-controller="Auth" asp-action="Login" class="btn btn-primary btn-lg px-4">Login</a>
-
-            <a asp-controller="Auth" asp-action="Register" class="btn btn-primary btn-lg px-4">Register</a>
-
-        </div>
+        <p>Não está registado? Clique</p>
+        <a asp-controller="Auth" asp-action="RegisterEmail" class="btn btn-primary btn-lg px-4">Aqui</a>
     </main>
-
     <footer class="pt-5 my-5 text-muted border-top">
         Created by Daniel &amp; Dmytro &middot; &copy; 2023
     </footer>

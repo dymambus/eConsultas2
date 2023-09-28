@@ -165,22 +165,40 @@ namespace UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult SaveDoctor(Doctor userModel)
+        public IActionResult SaveDoctor(Doctor doctor)
         {
-
             if (ModelState.IsValid)
             {
+                // Verifique se uma foto foi enviada
+                if (doctor.Photo != null && doctor.Photo.Length > 0)
+                {
+                    // Leia os dados da imagem em um byte array
+                    byte[] imageData;
+                    using (var stream = new MemoryStream())
+                    {
+                        doctor.Photo.CopyTo(stream);
+                        imageData = stream.ToArray();
+                    }
 
-                _context.Users.Add(userModel);
+                    // Salve o byte array de imagem em algum lugar ou armazene-o no banco de dados, como mencionado anteriormente
 
+                    // Restante do código para salvar o médico no banco de dados
+                    // ...
+                }
+                else
+                {
+                    // Nenhum arquivo de imagem foi enviado, você pode lidar com isso de acordo com suas necessidades
+                }
 
-                _context.SaveChanges();
-
-                return RedirectToAction("Login");
+                // Restante do código para salvar o médico no banco de dados
+                // ...
             }
 
-            return View(userModel);
+            // Se ocorrerem erros de validação, volte ao formulário de registro
+            return View("DoctorRegistration", doctor);
         }
+
+
 
         [HttpGet]
         public IActionResult RegisterPatientInfo(Patient patient)
@@ -231,82 +249,60 @@ namespace UI.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-        //[HttpGet]
-        //public IActionResult RegisterPatientInfo()
-        //{
-        //    return View();
-        //}
-        //[HttpPost]
-        //public IActionResult RegisterPatientInfo(PatientInfoViewModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        var userEmail = HttpContext.Session.GetString("UserEmail");
-        //        var userRole = HttpContext.Session.GetInt32("UserRole");
 
-        //        if (!string.IsNullOrEmpty(userEmail) && userRole.HasValue)
-        //        {
-        //            if (userRole == 0)
-        //            {
-        //                var patient = new Patient
-        //                {
-        //                    Email = userEmail,
-        //                    Password = model.Password,
-        //                    RoleId = userRole.Value,
-        //                    Name = model.Name,
-        //                    Phone = model.Phone
-        //                };
-        //                _context.Patients.Add(patient);
-        //            }
-        //            _context.SaveChanges();
 
-        //            return RedirectToAction("Login", "Auth");
-        //        }
-        //    }
+        [HttpPost]
+        public IActionResult UploadPhoto(IFormFile filePhoto)
+        {
+            if (filePhoto != null && filePhoto.Length > 0)
+            {
+                // Verifique se o arquivo é uma imagem (opcional)
+                if (IsImageFile(filePhoto))
+                {
+                    // Leia os dados da imagem em um byte array
+                    byte[] imageData;
+                    using (var stream = new MemoryStream())
+                    {
+                        filePhoto.CopyTo(stream);
+                        imageData = stream.ToArray();
+                    }
 
-        //    return View(model);
-        //}
-        //[HttpGet]
-        //public IActionResult RegisterDoctorInfo()
-        //{
-        //    return View();
-        //}
-        //[HttpPost]
-        //public IActionResult RegisterDoctorInfo(DoctorInfoViewModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        var userEmail = HttpContext.Session.GetString("UserEmail");
-        //        var userRole = HttpContext.Session.GetInt32("UserRole");
+                    // Crie um novo objeto Photograph e defina os dados da imagem
+                    var photograph = new Photograph
+                    {
+                        ImageData = imageData
+                    };
 
-        //        if (!string.IsNullOrEmpty(userEmail) && userRole.HasValue)
-        //        {
-        //            if (userRole == 1)
-        //            {
-        //                var doctor = new LibBiz.Models.Doctor
-        //                {
-        //                    Name = model.Name,
-        //                    Phone = model.Phone,
-        //                    Email = userEmail,
-        //                    Password = model.Password,
-        //                    RoleId = userRole.Value,
-        //                    Region = model.Region,
-        //                    City = model.City,
-        //                    Address = model.Address,
-        //                    SpecializationName = model.SpecializationName,
-        //                    Price = model.Price,
-        //                };
-        //                _context.Doctors.Add(doctor);
-        //            }
-        //            _context.SaveChanges();
+                    // Adicione o objeto Photograph ao contexto do banco de dados e salve as alterações
+                    _context.Photographs.Add(photograph);
+                    _context.SaveChanges();
 
-        //            return RedirectToAction("Login", "Auth");
-        //        }
-        //    }
+                    return RedirectToAction("Success"); // Redirecionar para uma página de sucesso
+                }
+                else
+                {
+                    // O arquivo não é uma imagem válida
+                    TempData["Message"] = "Por favor, selecione uma imagem válida (jpg, jpeg, ou png).";
+                    return RedirectToAction("Error"); // Redirecionar para uma página de erro
+                }
+            }
+            else
+            {
+                // Nenhum arquivo foi enviado
+                TempData["Message"] = "Por favor, selecione um arquivo para fazer upload.";
+                return RedirectToAction("Error"); // Redirecionar para uma página de erro
+            }
+        }
 
-        //    return View(model);
-        //}
 
+
+        private bool IsImageFile(IFormFile file)
+        {
+            // Verifique se a extensão do arquivo corresponde a uma imagem
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+            var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
+            return allowedExtensions.Contains(fileExtension);
+        }
 
     }
 }
