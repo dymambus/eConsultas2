@@ -18,10 +18,12 @@
 
             <form asp-asp-controller="Doctor" asp-action="UploadProfilePicture" method="post" enctype="multipart/form-data">
                 <h5 class="m-3">Profile Picture</h5>
-                @if(Model.ImageData == null){
+                @if (Model.ImageData == null)
+                {
                     <p>No profile picture uploaded</p>
                 }
-                else{
+                else
+                {
                     <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.ImageData)" alt="Profile Picture" class="img-fluid rounded" style="max-width: 200px; max-height: 200px;" />
                 }
                 <div class="form-group mb-3">
@@ -45,6 +47,12 @@
                     <small class="form-text text-muted">(your phone as shown to your customer)</small>
                 </div>
                 <!-- Restante das propriedades do DoctorInfoViewModel -->
+                <button type="submit" class="mt-3 btn btn-primary">Update</button>
+            </form>
+
+            <form asp-asp-controller="Doctor" asp-action="UpdateDoctorPassword" method="post" enctype="multipart/form-data">
+                <input hidden name="doctorId" value="@Model.UserId" />
+                <input asp-for="Name" class="form-control" placeholder="Enter name">
                 <button type="submit" class="mt-3 btn btn-primary">Update</button>
             </form>
         </main>

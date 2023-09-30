@@ -297,6 +297,13 @@ namespace UI.Areas.Doctor.Controllers
             return RedirectToAction("DoctorFees");
 
         }
+        [HttpPost]
+        public IActionResult UpdateDoctorPassword(int doctorId, string oldpassword, string newpassword)
+        {
+            var doctor = _BM.UpdateDoctorPassword(doctorId, oldpassword, newpassword);
+            return RedirectToAction("DoctorProfile");
+
+        }
 
 
     }

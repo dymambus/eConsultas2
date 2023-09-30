@@ -64,6 +64,7 @@ namespace LibBiz.Data
         public Doctor UpdateDoctorSpecialization(int doctorId, string specialization);
         public Doctor UpdateDoctorClinic(int doctorId, string address, string region, string city);
         public Doctor UpdateDoctorFees(int doctorId, int fees);
+        public Doctor UpdateDoctorPassword(int doctorId, string oldpassword, string newpassword)
 
     }
 
@@ -258,6 +259,27 @@ namespace LibBiz.Data
                 throw new Exception("Médico não encontrado");
             }
             existingDoctor.Price = fees;
+
+            _context.SaveChanges();
+
+            return existingDoctor;
+        }
+
+        public Doctor UpdateDoctorPassword(int doctorId, string oldpassword, string newpassword)
+        {
+            var existingDoctor = _context.Doctors.Find(doctorId);
+            if (existingDoctor == null)
+            {
+                throw new Exception("Médico não encontrado");
+            }
+            if (oldpassword==existingDoctor.Password)
+            {
+                existingDoctor.Password = newpassword;
+            }
+            else
+            {
+                throw new Exception("Senha incorreta");
+            }
 
             _context.SaveChanges();
 
