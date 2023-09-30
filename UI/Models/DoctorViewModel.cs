@@ -17,6 +17,6 @@ namespace UI.Models
         public string? SpecializationName { get; set; }
         public int? Price { get; set; }
         public Photograph? Photograph { get; set; }
-        public byte[] ImageData { get; set; }
+        public byte[]? ImageData { get; set; }
     }
 }

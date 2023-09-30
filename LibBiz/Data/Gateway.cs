@@ -60,6 +60,11 @@ namespace LibBiz.Data
         public List<Appointment> GetAppointmentsByPatientId(int userId);
         public List<Appointment> GetAppointmentsByDoctorId(int userId);
         public Doctor UpdateDoctorPhoto(Doctor doctor);
+        public Doctor UpdateDoctor(Doctor updatedDoctor);
+        public Doctor UpdateDoctorSpecialization(int doctorId, string specialization);
+        public Doctor UpdateDoctorClinic(int doctorId, string address, string region, string city);
+        public Doctor UpdateDoctorFees(int doctorId, int fees);
+
     }
 
     public class BusinessMethodsImpl : IBusinessMethods
@@ -123,6 +128,24 @@ namespace LibBiz.Data
 
             return doctor;
         }
+        public Doctor UpdateDoctor(Doctor updatedDoctor)
+        {
+            var existingDoctor = _context.Doctors.Find(updatedDoctor.UserId);
+            if (existingDoctor == null)
+            {
+                throw new Exception("Médico não encontrado");
+            }
+
+            existingDoctor.Email = updatedDoctor.Email;
+            existingDoctor.Name = updatedDoctor.Name;
+            existingDoctor.Phone = updatedDoctor.Phone;
+            existingDoctor.SpecializationName = updatedDoctor.SpecializationName;
+            existingDoctor.Price = updatedDoctor.Price;
+
+            _context.SaveChanges();
+
+            return updatedDoctor;
+        }
         public Doctor UpdateDoctorInfo(int doctorId, string name, string phone)
         {
             var existingDoctor = _context.Doctors.Find(doctorId);
@@ -137,7 +160,6 @@ namespace LibBiz.Data
 
             return existingDoctor;
         }
-
         public Doctor UpdateDoctorPhoto(Doctor doctor)
         {
             var existingDoctor = _context.Doctors.Find(doctor.UserId);
@@ -198,6 +220,49 @@ namespace LibBiz.Data
 
             return appointment;
         }
-    }
+        public Doctor UpdateDoctorSpecialization(int doctorId, string specialization)
+        {
+            var existingDoctor = _context.Doctors.Find(doctorId);
+            if (existingDoctor == null)
+            {
+                throw new Exception("Médico não encontrado");
+            }
+            existingDoctor.SpecializationName = specialization;
 
+            _context.SaveChanges();
+
+            return existingDoctor;
+        }
+
+        public Doctor UpdateDoctorClinic(int doctorId, string address, string region, string city)
+        {
+            var existingDoctor = _context.Doctors.Find(doctorId);
+            if (existingDoctor == null)
+            {
+                throw new Exception("Médico não encontrado");
+            }
+            existingDoctor.Address = address;
+            existingDoctor.Region = region;
+            existingDoctor.City = city;
+
+            _context.SaveChanges();
+
+            return existingDoctor;
+        }
+
+        public Doctor UpdateDoctorFees(int doctorId, int fees)
+        {
+            var existingDoctor = _context.Doctors.Find(doctorId);
+            if (existingDoctor == null)
+            {
+                throw new Exception("Médico não encontrado");
+            }
+            existingDoctor.Price = fees;
+
+            _context.SaveChanges();
+
+            return existingDoctor;
+        }
+    }
 }
+

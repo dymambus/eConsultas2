@@ -34,7 +34,7 @@ namespace WebApi.Controllers
         [HttpPost]
         public IActionResult UpdateDoctorInfo(Doctor updatedDoctor)
         {
-            Doctor doctor = _BM.UpdateDoctorInfo(updatedDoctor);
+            Doctor doctor = _BM.UpdateDoctor(updatedDoctor);
             return Ok(doctor);
         }
 

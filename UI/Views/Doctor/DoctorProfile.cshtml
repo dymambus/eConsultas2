@@ -18,7 +18,12 @@
 
             <form asp-asp-controller="Doctor" asp-action="UploadProfilePicture" method="post" enctype="multipart/form-data">
                 <h5 class="m-3">Profile Picture</h5>
-                <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.ImageData)" alt="Profile Picture" class="img-fluid rounded" style="max-width: 200px; max-height: 200px;" />
+                @if(Model.ImageData == null){
+                    <p>No profile picture uploaded</p>
+                }
+                else{
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.ImageData)" alt="Profile Picture" class="img-fluid rounded" style="max-width: 200px; max-height: 200px;" />
+                }
                 <div class="form-group mb-3">
                     <label asp-for="Photograph">Profile Picture</label>
                     <input type="file" asp-for="Photograph.ImageData" name="profilePicture" class="form-control-file">
