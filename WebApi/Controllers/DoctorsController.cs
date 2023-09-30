@@ -31,10 +31,10 @@ namespace WebApi.Controllers
             return Ok(doctorsWithSpecialization);
         }
 
-        [HttpPut]
-        public IActionResult UpdateDoctor(Doctor updatedDoctor)
+        [HttpPost]
+        public IActionResult UpdateDoctorInfo(Doctor updatedDoctor)
         {
-            Doctor doctor = _BM.UpdateDoctor(updatedDoctor);
+            Doctor doctor = _BM.UpdateDoctorInfo(updatedDoctor);
             return Ok(doctor);
         }
 

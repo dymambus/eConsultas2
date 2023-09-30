@@ -51,7 +51,7 @@ namespace LibBiz.Data
     public interface IBusinessMethods
     {
         public List<string> GetAllSpecializations();
-        public Doctor UpdateDoctor(Doctor updatedDoctor);
+        public Doctor UpdateDoctorInfo(int doctorId, string? name, string? phone, string? address, string? region, string? city, string? specializationName, int? price);
         public List<Doctor> GetAllDoctors();
         public Doctor GetDoctorById(int id);
         public Patient UpdatePatient(Patient updatedPatient);
@@ -123,24 +123,27 @@ namespace LibBiz.Data
 
             return doctor;
         }
-        public Doctor UpdateDoctor(Doctor updatedDoctor)
+        public Doctor UpdateDoctorInfo(int doctorId, string? name, string? phone, string? address, string? region, string? city, string? specializationName, int? price)
         {
-            var existingDoctor = _context.Doctors.Find(updatedDoctor.UserId);
+            var existingDoctor = _context.Doctors.Find(doctorId);
             if (existingDoctor == null)
             {
                 throw new Exception("Médico não encontrado");
             }
 
-            existingDoctor.Email = updatedDoctor.Email;
-            existingDoctor.Name = updatedDoctor.Name;
-            existingDoctor.Phone = updatedDoctor.Phone;
-            existingDoctor.SpecializationName = updatedDoctor.SpecializationName;
-            existingDoctor.Price = updatedDoctor.Price;
+            existingDoctor.Name = name;
+            existingDoctor.Phone = phone;
+            existingDoctor.Address = address;
+            existingDoctor.Region = region;
+            existingDoctor.City = city;
+            existingDoctor.SpecializationName = specializationName;
+            existingDoctor.Price = price;
 
             _context.SaveChanges();
 
-            return updatedDoctor;
+            return existingDoctor;
         }
+
         public Doctor UpdateDoctorPhoto(Doctor doctor)
         {
             var existingDoctor = _context.Doctors.Find(doctor.UserId);
