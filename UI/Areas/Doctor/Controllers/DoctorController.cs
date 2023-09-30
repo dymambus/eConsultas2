@@ -282,9 +282,9 @@ namespace UI.Areas.Doctor.Controllers
             return RedirectToAction("DoctorProfile"); // Trate os casos de erro adequadamente
         }
 
-        public IActionResult UpdateDoctorInfo(int doctorId, string? name, string? phone, string? address, string? region, string? city, string? specializationName, int? price)
+        public IActionResult UpdateDoctorInfo(int doctorId, string name, string phone)
         {
-            var doctor = _BM.UpdateDoctorInfo(doctorId, name, phone, address, region, city, specializationName, price);
+            var doctor = _BM.UpdateDoctorInfo(doctorId, name, phone);
             return RedirectToAction("DoctorProfile");
 
         }

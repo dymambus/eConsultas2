@@ -2,29 +2,37 @@
     Layout = null;
 }
 
-<link href="~/css/starter-template.css" rel="stylesheet" />
+<link href="~/css/signin.css" rel="stylesheet" />
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/eConsultasMVC.styles.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/starter-template.css" asp-append-version="true" />
 
-<div class="col-lg-8 mx-auto p-3 py-md-5">
+<div class="text-center w-100">
 
-    <header class="d-flex text-center pb-3 mb-5 border-bottom">
-
-
-
-        <span class="fs-4">Bem Vindos ao eConsultas</span>
-
-
-
+    <header class="pb-5 mb-5 border-bottom">
+        <h1>Bem Vindos ao eConsultas</h1>
     </header>
 
     <main>
         <div class="mb-5">
-            <p class="fs-5 col-md-8">De forma a conseguir aceder a toda a informação, terá que fazer o</p>
+            <span class="fs-5">
+                De forma a conseguir aceder a toda a informação,
+                <br />
+                terá que fazer o
+            </span>
+            <br />
+            <br />
             <a asp-controller="Auth" asp-action="Login" class="btn btn-primary btn-lg px-4">Login</a>
-            <p>Não está registado? Clique</p>
+            <br />
+            <br />
+            <br />
+            <span class="fs-5">
+                Não está registado? Clique
+            </span>
+            <br />
+            <br />
+
             <a asp-controller="Auth" asp-action="Register" class="btn btn-primary btn-lg px-4">Aqui</a>
         </div>
     </main>
