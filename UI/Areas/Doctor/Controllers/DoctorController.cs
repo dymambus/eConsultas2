@@ -42,7 +42,7 @@ namespace UI.Areas.Doctor.Controllers
 
                 if (doctor != null)
                 {
-                    var user = new LibBiz.Models.Doctor()
+                    var user = new DoctorViewModel()
                     {
                         // Preencha as propriedades de DoctorInfoViewModel com os dados do médico
                         UserId = doctor.UserId,
@@ -54,7 +54,8 @@ namespace UI.Areas.Doctor.Controllers
                         Region = doctor.Region,
                         City = doctor.City,
                         SpecializationName = doctor.SpecializationName,
-                        Price = (int)doctor.Price
+                        Price = (int)doctor.Price,
+                        ImageData = doctor.Photograph.ImageData
                     };
 
                     // Renderize a página DoctorProfile com as informações do médico
@@ -85,9 +86,11 @@ namespace UI.Areas.Doctor.Controllers
 
                 if (doctor != null)
                 {
-                    var user = new LibBiz.Models.Doctor()
+                    var user = new DoctorViewModel()
                     {
                         // Preencha as propriedades de DoctorInfoViewModel com os dados do médico
+                        UserId = doctor.UserId,
+                        RoleId = doctor.RoleId,
                         Name = doctor.Name,
                         Email = userEmail,
                         Phone = doctor.Phone,
@@ -95,9 +98,9 @@ namespace UI.Areas.Doctor.Controllers
                         Region = doctor.Region,
                         City = doctor.City,
                         SpecializationName = doctor.SpecializationName,
-                        Price = (int)doctor.Price
+                        Price = (int)doctor.Price,
+                        ImageData = doctor.Photograph.ImageData
                     };
-
                     // Renderize a página DoctorProfile com as informações do médico
                     return View(user);
                 }
@@ -260,7 +263,6 @@ namespace UI.Areas.Doctor.Controllers
             return Ok(doctor);
         }
 
-        
         [HttpPost]
         public IActionResult UploadProfilePicture(int doctorId, IFormFile profilePicture)
         {
@@ -274,10 +276,11 @@ namespace UI.Areas.Doctor.Controllers
                     profilePicture.CopyTo(ms);
                     doctor.Photograph = new Photograph
                     {
+                        UserId = doctor.UserId,
                         ImageData = ms.ToArray()
                     };
+                    _BM.UpdateDoctorPhoto(doctor);
                 }
-
                 // Atualize o médico no banco de dados para incluir a foto
 
                 return RedirectToAction("DoctorProfile");

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace UI.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class _1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,16 +26,42 @@ namespace UI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Photographs",
+                name: "Appointments",
                 columns: table => new
                 {
-                    PhotographId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ImageData = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
+                    PatientUserId = table.Column<int>(type: "int", nullable: false),
+                    DoctorUserId = table.Column<int>(type: "int", nullable: false),
+                    IsDone = table.Column<bool>(type: "bit", nullable: true),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Price = table.Column<int>(type: "int", nullable: true),
+                    PatientMessage = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AttachId = table.Column<int>(type: "int", nullable: true),
+                    DoctorMessage = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Photographs", x => x.PhotographId);
+                    table.PrimaryKey("PK_Appointments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Appointments_Attachments_AttachId",
+                        column: x => x.AttachId,
+                        principalTable: "Attachments",
+                        principalColumn: "AttachId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Photographs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ImageData = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Photographs", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -64,44 +90,7 @@ namespace UI.Migrations
                         name: "FK_Users_Photographs_PhotographId",
                         column: x => x.PhotographId,
                         principalTable: "Photographs",
-                        principalColumn: "PhotographId");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Appointments",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PatientUserId = table.Column<int>(type: "int", nullable: false),
-                    DoctorUserId = table.Column<int>(type: "int", nullable: false),
-                    IsDone = table.Column<bool>(type: "bit", nullable: true),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Price = table.Column<int>(type: "int", nullable: true),
-                    PatientMessage = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AttachId = table.Column<int>(type: "int", nullable: true),
-                    DoctorMessage = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Appointments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Appointments_Attachments_AttachId",
-                        column: x => x.AttachId,
-                        principalTable: "Attachments",
-                        principalColumn: "AttachId");
-                    table.ForeignKey(
-                        name: "FK_Appointments_Users_DoctorUserId",
-                        column: x => x.DoctorUserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Appointments_Users_PatientUserId",
-                        column: x => x.PatientUserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -120,14 +109,47 @@ namespace UI.Migrations
                 column: "PatientUserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Photographs_UserId",
+                table: "Photographs",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_PhotographId",
                 table: "Users",
                 column: "PhotographId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Appointments_Users_DoctorUserId",
+                table: "Appointments",
+                column: "DoctorUserId",
+                principalTable: "Users",
+                principalColumn: "UserId",
+                onDelete: ReferentialAction.Restrict);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Appointments_Users_PatientUserId",
+                table: "Appointments",
+                column: "PatientUserId",
+                principalTable: "Users",
+                principalColumn: "UserId",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Photographs_Users_UserId",
+                table: "Photographs",
+                column: "UserId",
+                principalTable: "Users",
+                principalColumn: "UserId",
+                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Photographs_Users_UserId",
+                table: "Photographs");
+
             migrationBuilder.DropTable(
                 name: "Appointments");
 

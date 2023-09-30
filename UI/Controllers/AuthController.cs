@@ -58,13 +58,10 @@ namespace UI.Controllers
             // Se as credenciais estiverem erradas ou o usuário não tem um papel válido
             return Unauthorized(new { message = "Credenciais inválidas" });
         }
-
-
         private bool VerifyPassword(User user, string password)
         {
             return user.Password == password;
         }
-
         private string GenerateJwtToken(User user)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
@@ -231,8 +228,6 @@ namespace UI.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-
-
 
     }
 }

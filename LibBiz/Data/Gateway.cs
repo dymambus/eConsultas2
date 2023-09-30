@@ -19,9 +19,9 @@ namespace LibBiz.Data
 
         public T CreateUser<T>(T user) where T : User
         {
-            if (user.GetType() == typeof(Doctor)) 
-            { 
-                Doctor doctor = new Doctor { Email = user.Email , Password = user.Password, RoleId = user.RoleId };
+            if (user.GetType() == typeof(Doctor))
+            {
+                Doctor doctor = new Doctor { Email = user.Email, Password = user.Password, RoleId = user.RoleId };
                 _context.Users.Add(doctor);
             }
             else if (user.GetType() == typeof(Patient))
@@ -59,6 +59,7 @@ namespace LibBiz.Data
         public Doctor GetDoctorByEmail(string email);
         public List<Appointment> GetAppointmentsByPatientId(int userId);
         public List<Appointment> GetAppointmentsByDoctorId(int userId);
+        public Doctor UpdateDoctorPhoto(Doctor doctor);
     }
 
     public class BusinessMethodsImpl : IBusinessMethods
@@ -114,9 +115,12 @@ namespace LibBiz.Data
         }
         public Doctor GetDoctorByEmail(string email)
         {
-            Doctor doctor = _context.Doctors
-                .Where(x => x.Email == email)
-                .FirstOrDefault();
+            Doctor doctor = _context.Doctors.Include(d => d.Photograph).FirstOrDefault(d => d.Email == email);
+            if (doctor == null)
+            {
+                throw new Exception("Médico não encontrado");
+            }
+
             return doctor;
         }
         public Doctor UpdateDoctor(Doctor updatedDoctor)
@@ -136,6 +140,20 @@ namespace LibBiz.Data
             _context.SaveChanges();
 
             return updatedDoctor;
+        }
+        public Doctor UpdateDoctorPhoto(Doctor doctor)
+        {
+            var existingDoctor = _context.Doctors.Find(doctor.UserId);
+            if (existingDoctor == null)
+            {
+                throw new Exception("Médico não encontrado");
+            }
+
+            existingDoctor.Photograph = doctor.Photograph;
+
+            _context.SaveChanges();
+
+            return existingDoctor;
         }
         public Patient UpdatePatient(Patient updatedPatient)
         {

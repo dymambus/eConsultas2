@@ -10,6 +10,8 @@ namespace LibBiz.Models
     {
         public int Id { get; set; } // Identificador único da foto
         public byte[] ImageData { get; set; } // Dados binários da imagem
-        
+
+        public int UserId { get; set; } // Identificador único do usuário
+        public User User { get; set; } // Usuário dono da foto
     }
 }
