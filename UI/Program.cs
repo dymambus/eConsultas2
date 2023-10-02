@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using UI.Controllers;
 using Microsoft.Extensions.Configuration;
 using Serilog;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,14 @@ builder.Services.AddScoped<Gateway>();
 
 builder.Services.AddScoped<IBusinessMethods, BusinessMethodsImpl>();
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    // Configure as opções de cookies, se necessário
+});
 // Adicione a configuração da sessão
 builder.Services.AddSession(options =>
 {
@@ -45,6 +54,9 @@ app.UseStaticFiles();
 app.UseSession();
 
 app.UseRouting();
+
+app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllerRoute(

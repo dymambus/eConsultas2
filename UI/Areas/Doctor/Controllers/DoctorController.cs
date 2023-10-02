@@ -9,6 +9,8 @@ using System.Net;
 using UI.Models;
 using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace UI.Areas.Doctor.Controllers
 {
@@ -25,6 +27,7 @@ namespace UI.Areas.Doctor.Controllers
             _client.BaseAddress = new Uri("https://localhost:44364/api/");
         }
 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet]
         public IActionResult DoctorDashboard()
         {
@@ -66,7 +69,7 @@ namespace UI.Areas.Doctor.Controllers
                 }
             }
         }
-
+        [Authorize]
         [HttpGet]
         public IActionResult DoctorProfile()
         {
@@ -114,7 +117,7 @@ namespace UI.Areas.Doctor.Controllers
                 }
             }
         }
-
+        [Authorize]
         [HttpGet]
         public IActionResult DoctorSpecialization()
         {
@@ -149,7 +152,7 @@ namespace UI.Areas.Doctor.Controllers
                 }
             }
         }
-
+        [Authorize]
         [HttpGet]
         public IActionResult DoctorClinic()
         {
@@ -185,7 +188,7 @@ namespace UI.Areas.Doctor.Controllers
                 }
             }
         }
-
+        [Authorize]
         [HttpGet]
         public IActionResult DoctorFees()
         {
