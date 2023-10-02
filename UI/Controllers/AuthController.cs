@@ -185,24 +185,6 @@ namespace UI.Controllers
             return View(patient);
         }
 
-        [HttpPost]
-        public IActionResult SavePatient(Patient userModel)
-        {
-
-            if (ModelState.IsValid)
-            {
-
-                _context.Users.Add(userModel);
-
-
-                _context.SaveChanges();
-
-                return RedirectToAction("Index");
-            }
-
-            return View(userModel);
-        }
-
         [HttpGet]
         public IActionResult RegisterAdditionalInfo()
         {
@@ -227,6 +209,21 @@ namespace UI.Controllers
             }
 
             return RedirectToAction("Index", "Home");
+        }
+        [HttpPost]
+        [Route("RegisterPatientInfo")]
+        public IActionResult SavePatient(Patient userModel)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Users.Add(userModel);
+
+                _context.SaveChanges();
+
+                return RedirectToAction("Login");
+            }
+
+            return RedirectToAction("Register");
         }
 
     }
