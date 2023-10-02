@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace UI.Migrations
 {
     [DbContext(typeof(ddContext))]
-    [Migration("20230927120807_InitialCreate")]
+    [Migration("20230929105029_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -160,7 +160,13 @@ namespace UI.Migrations
                     b.Property<int?>("Price")
                         .HasColumnType("int");
 
+                    b.Property<string>("PriceDescription")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Region")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SpecializationDescription")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SpecializationName")

@@ -2,9 +2,15 @@ using LibBiz.Data;
 using Microsoft.EntityFrameworkCore;
 using UI.Controllers;
 using Microsoft.Extensions.Configuration;
-
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger();
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

@@ -59,6 +59,10 @@ namespace UI.Controllers
             return Unauthorized(new { message = "Credenciais inválidas" });
         }
 
+        public IActionResult SignOut()
+        {
+            return RedirectToAction("Login", "Auth");
+        }
 
         private bool VerifyPassword(User user, string password)
         {
@@ -115,6 +119,7 @@ namespace UI.Controllers
                     {
                         Email = userModel.Email,
                         Password = userModel.Password,
+                        RoleId = userModel.RoleId
                     };
 
                     return RedirectToAction("RegisterPatientInfo", patient);
@@ -165,6 +170,7 @@ namespace UI.Controllers
         }
 
         [HttpPost]
+        [Route("RegisterDoctorInfo")]
         public IActionResult SaveDoctor(Doctor userModel)
         {
 
@@ -189,124 +195,19 @@ namespace UI.Controllers
         }
 
         [HttpPost]
+        [Route("RegisterPatientInfo")]
         public IActionResult SavePatient(Patient userModel)
         {
-
             if (ModelState.IsValid)
             {
-
                 _context.Users.Add(userModel);
-
 
                 _context.SaveChanges();
 
-                return RedirectToAction("Index");
+                return RedirectToAction("Login");
             }
 
-            return View(userModel);
+            return RedirectToAction("Register");
         }
-
-        [HttpGet]
-        public IActionResult RegisterAdditionalInfo()
-        {
-
-            int? userRole = HttpContext.Session.GetInt32("UserRole");
-
-            if (userRole == null)
-            {
-
-                return RedirectToAction("Index", "Home");
-            }
-
-
-            if (userRole == 0)
-            {
-
-                return View("RegisterPatientInfo");
-            }
-            else if (userRole == 1)
-            {
-                return View("RegisterDoctorInfo");
-            }
-
-            return RedirectToAction("Index", "Home");
-        }
-        //[HttpGet]
-        //public IActionResult RegisterPatientInfo()
-        //{
-        //    return View();
-        //}
-        //[HttpPost]
-        //public IActionResult RegisterPatientInfo(PatientInfoViewModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        var userEmail = HttpContext.Session.GetString("UserEmail");
-        //        var userRole = HttpContext.Session.GetInt32("UserRole");
-
-        //        if (!string.IsNullOrEmpty(userEmail) && userRole.HasValue)
-        //        {
-        //            if (userRole == 0)
-        //            {
-        //                var patient = new Patient
-        //                {
-        //                    Email = userEmail,
-        //                    Password = model.Password,
-        //                    RoleId = userRole.Value,
-        //                    Name = model.Name,
-        //                    Phone = model.Phone
-        //                };
-        //                _context.Patients.Add(patient);
-        //            }
-        //            _context.SaveChanges();
-
-        //            return RedirectToAction("Login", "Auth");
-        //        }
-        //    }
-
-        //    return View(model);
-        //}
-        //[HttpGet]
-        //public IActionResult RegisterDoctorInfo()
-        //{
-        //    return View();
-        //}
-        //[HttpPost]
-        //public IActionResult RegisterDoctorInfo(DoctorInfoViewModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        var userEmail = HttpContext.Session.GetString("UserEmail");
-        //        var userRole = HttpContext.Session.GetInt32("UserRole");
-
-        //        if (!string.IsNullOrEmpty(userEmail) && userRole.HasValue)
-        //        {
-        //            if (userRole == 1)
-        //            {
-        //                var doctor = new LibBiz.Models.Doctor
-        //                {
-        //                    Name = model.Name,
-        //                    Phone = model.Phone,
-        //                    Email = userEmail,
-        //                    Password = model.Password,
-        //                    RoleId = userRole.Value,
-        //                    Region = model.Region,
-        //                    City = model.City,
-        //                    Address = model.Address,
-        //                    SpecializationName = model.SpecializationName,
-        //                    Price = model.Price,
-        //                };
-        //                _context.Doctors.Add(doctor);
-        //            }
-        //            _context.SaveChanges();
-
-        //            return RedirectToAction("Login", "Auth");
-        //        }
-        //    }
-
-        //    return View(model);
-        //}
-
-
     }
 }

@@ -157,7 +157,13 @@ namespace UI.Migrations
                     b.Property<int?>("Price")
                         .HasColumnType("int");
 
+                    b.Property<string>("PriceDescription")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Region")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SpecializationDescription")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SpecializationName")

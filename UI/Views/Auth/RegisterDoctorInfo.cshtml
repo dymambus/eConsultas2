@@ -11,14 +11,14 @@
 
 <div class="text-center w-100">
     <main class="form-signin">
-        <form asp-asp-controller="Auth" asp-action="SaveDoctor" method="post" enctype="multipart/form-data">
+        <form asp-controller="Auth" asp-action="SaveDoctor" method="post" enctype="multipart/form-data">
             <input hidden asp-for="@Model.Email" />
             <input hidden asp-for="@Model.Password" />
-            <input hidden asp-for="@Model.RoleId"/>
-            
+            <input hidden asp-for="@Model.RoleId" />
+
             <h1 class="h3 mb-3 fw-normal">Register Doctor Information</h1>
-            
-           <div class="form-floating mb-3">
+
+            <div class="form-floating mb-3">
                 <input type="text" class="form-control" asp-for="Name" required>
                 <label asp-for="Name">Name:</label>
             </div>

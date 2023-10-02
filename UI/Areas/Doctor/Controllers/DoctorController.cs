@@ -65,7 +65,7 @@ namespace UI.Areas.Doctor.Controllers
             }
         }
         [HttpGet]
-        public IActionResult DoctorProfile()
+        public IActionResult Profile()
         {
             var token = HttpContext.Session.GetString("Token");
             if (token == null)

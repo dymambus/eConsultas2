@@ -13,7 +13,9 @@ namespace LibBiz.Models
         public string? City { get; set; }
         public string? Address { get; set; }
         public string? SpecializationName { get; set; }
+        public string? SpecializationDescription { get; set; }
         public int? Price { get; set; }
+        public string? PriceDescription { get; set; }
         public Photograph? Photograph { get; set; }
     }
 }

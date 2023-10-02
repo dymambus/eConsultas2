@@ -45,7 +45,6 @@ namespace LibBiz.Data
             _context.SaveChanges();
         }
 
-
     }
 
     public interface IBusinessMethods
@@ -59,6 +58,9 @@ namespace LibBiz.Data
         public Doctor GetDoctorByEmail(string email);
         public List<Appointment> GetAppointmentsByPatientId(int userId);
         public List<Appointment> GetAppointmentsByDoctorId(int userId);
+
+        // Dmytro
+        public Patient? GetPatientByEmail(string? email);
     }
 
     public class BusinessMethodsImpl : IBusinessMethods
@@ -68,6 +70,12 @@ namespace LibBiz.Data
         {
             _context = context;
         }
+
+        public Patient? GetPatientByEmail(string? email)
+        {
+            return _context.Patients.Where(x => x.Email == email).FirstOrDefault();
+        }
+
         public List<Appointment> GetAppointmentsByDoctorId(int userId)
         {
             var query = _context.Appointments

@@ -54,7 +54,9 @@ namespace UI.Migrations
                     City = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SpecializationName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SpecializationDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<int>(type: "int", nullable: true),
+                    PriceDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PhotographId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
