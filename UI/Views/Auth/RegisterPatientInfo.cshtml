@@ -14,10 +14,10 @@
         <form asp-action="SavePatient" method="post">
             <h1 class="h3 mb-3 fw-normal">Register Patient Information</h1>
 
-            <div class="form-floating mb-3">
-                <input type="password" class="form-control" asp-for="Password" required>
-                <label asp-for="Password">Password:</label>
-            </div>
+            <input hidden asp-for="@Model.Email" />
+            <input hidden asp-for="@Model.Password" />
+            <input hidden asp-for="@Model.RoleId" />
+
             <div class="form-floating mb-3">
                 <input type="text" class="form-control" asp-for="Name" required>
                 <label asp-for="Name">Name:</label>
@@ -28,6 +28,5 @@
             </div>
             <button type="submit" class="btn btn-primary btn-lg mt-3 w-100y">Register</button>
         </form>
-        <partial name="_Footer" />
     </main>
 </div>
