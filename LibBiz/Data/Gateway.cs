@@ -64,7 +64,7 @@ namespace LibBiz.Data
         public Doctor UpdateDoctorSpecialization(int doctorId, string specialization);
         public Doctor UpdateDoctorClinic(int doctorId, string address, string region, string city);
         public Doctor UpdateDoctorFees(int doctorId, int fees);
-        public Doctor UpdateDoctorPassword(int doctorId, string oldpassword, string newpassword)
+        public Doctor UpdateDoctorPassword(int doctorId, string oldpassword, string newpassword);
 
     }
 
