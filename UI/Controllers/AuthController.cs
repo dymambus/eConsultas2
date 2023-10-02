@@ -210,6 +210,7 @@ namespace UI.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
         [HttpPost]
         [Route("RegisterPatientInfo")]
         public IActionResult SavePatient(Patient userModel)
