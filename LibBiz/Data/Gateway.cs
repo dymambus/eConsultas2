@@ -65,6 +65,7 @@ namespace LibBiz.Data
         public Doctor UpdateDoctorClinic(int doctorId, string address, string region, string city);
         public Doctor UpdateDoctorFees(int doctorId, int fees);
         public Doctor UpdateDoctorPassword(int doctorId, string oldpassword, string newpassword);
+        public Patient? GetPatientByEmail(string? email);
 
     }
 
@@ -118,6 +119,10 @@ namespace LibBiz.Data
             }
 
             return doctor;
+        }
+        public Patient? GetPatientByEmail(string? email)
+        {
+            return _context.Patients.Where(x => x.Email == email).FirstOrDefault();
         }
         public Doctor GetDoctorByEmail(string email)
         {
