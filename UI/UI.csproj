@@ -6,6 +6,10 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <DefineConstants>$(DefineConstants);CNSTRING_DMYTRO</DefineConstants>
+	</PropertyGroup>
+
 	<ItemGroup>
 	  <PackageReference Include="JWT" Version="10.1.0" />
 	  <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.11" />

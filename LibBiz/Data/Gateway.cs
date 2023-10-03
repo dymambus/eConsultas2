@@ -125,10 +125,7 @@ namespace LibBiz.Data
 
             return doctor;
         }
-        public Patient? GetPatientByEmail(string? email)
-        {
-            return _context.Patients.Where(x => x.Email == email).FirstOrDefault();
-        }
+
         public Doctor GetDoctorByEmail(string email)
         {
             Doctor doctor = _context.Doctors.Include(d => d.Photograph).FirstOrDefault(d => d.Email == email);
@@ -282,7 +279,7 @@ namespace LibBiz.Data
             {
                 throw new Exception("Médico não encontrado");
             }
-            if (oldpassword==existingDoctor.Password)
+            if (oldpassword == existingDoctor.Password)
             {
                 existingDoctor.Password = newpassword;
             }

@@ -3,6 +3,7 @@ using LibBiz.Data;
 using LibBiz.Models;
 using Newtonsoft.Json;
 using UI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace UI.Areas.Patient.Controllers
 {

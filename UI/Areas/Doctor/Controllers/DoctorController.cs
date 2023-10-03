@@ -209,7 +209,7 @@ namespace UI.Areas.Doctor.Controllers
                     var user = new DoctorViewModel()
                     {
                         UserId = doctor.UserId,
-                        Price= (int)doctor.Price
+                        Price = (int)doctor.Price
                     };
 
                     // Renderize a página DoctorProfile com as informações do médico
@@ -263,7 +263,7 @@ namespace UI.Areas.Doctor.Controllers
                 }
                 // Atualize o médico no banco de dados para incluir a foto
 
-                return RedirectToAction("DoctorProfile");
+                return RedirectToAction("Profile");
             }
 
             return RedirectToAction("DoctorProfile"); // Trate os casos de erro adequadamente
