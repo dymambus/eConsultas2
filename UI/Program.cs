@@ -4,6 +4,8 @@ using UI.Controllers;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,12 +31,14 @@ builder.Services.AddScoped<IBusinessMethods, BusinessMethodsImpl>();
 
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
 .AddJwtBearer(options =>
 {
-    // Configure as opções de cookies, se necessário
+    // Configure JWT authentication options here
 });
+
 // Adicione a configuração da sessão
 builder.Services.AddSession(options =>
 {

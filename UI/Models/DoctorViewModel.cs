@@ -9,6 +9,7 @@ namespace UI.Models
         public int RoleId { get; set; } // 0 - Pacient, 1 - Doctor, 2 - Admin
         public string Email { get; set; }
         public string Password { get; set; }
+        public string? NewPassword { get; set; } // for changing password
         public string? Name { get; set; }
         public string? Phone { get; set; }
         public string? Region { get; set; }

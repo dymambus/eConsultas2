@@ -87,11 +87,10 @@ namespace UI.Controllers
 
         public IActionResult LogOut()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                HttpContext.Session.Remove("Token");
-                HttpContext.Session.Remove("Email");
-            }
+
+            HttpContext.Session.Remove("Token");
+            HttpContext.Session.Remove("Email");
+
 
             return RedirectToAction("Login", "Auth");
         }

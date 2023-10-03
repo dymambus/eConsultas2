@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace UI.Areas.Doctor.Controllers
 {
+
     public class DoctorController : Controller
     {
         private ILogger<DoctorController> _logger;
@@ -27,7 +28,7 @@ namespace UI.Areas.Doctor.Controllers
             _client.BaseAddress = new Uri("https://localhost:44364/api/");
         }
 
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
         [HttpGet]
         public IActionResult DoctorDashboard()
         {
@@ -69,7 +70,6 @@ namespace UI.Areas.Doctor.Controllers
                 }
             }
         }
-        [Authorize]
         [HttpGet]
         public IActionResult DoctorProfile()
         {
@@ -117,7 +117,7 @@ namespace UI.Areas.Doctor.Controllers
                 }
             }
         }
-        [Authorize]
+
         [HttpGet]
         public IActionResult DoctorSpecialization()
         {
@@ -152,7 +152,7 @@ namespace UI.Areas.Doctor.Controllers
                 }
             }
         }
-        [Authorize]
+
         [HttpGet]
         public IActionResult DoctorClinic()
         {
@@ -188,7 +188,7 @@ namespace UI.Areas.Doctor.Controllers
                 }
             }
         }
-        [Authorize]
+
         [HttpGet]
         public IActionResult DoctorFees()
         {
@@ -301,9 +301,9 @@ namespace UI.Areas.Doctor.Controllers
 
         }
         [HttpPost]
-        public IActionResult UpdateDoctorPassword(int doctorId, string oldpassword, string newpassword)
+        public IActionResult UpdateDoctorPassword(int doctorId, string password, string newpassword)
         {
-            var doctor = _BM.UpdateDoctorPassword(doctorId, oldpassword, newpassword);
+            var doctor = _BM.UpdateDoctorPassword(doctorId, password, newpassword);
             return RedirectToAction("DoctorProfile");
 
         }
