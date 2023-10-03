@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibBiz", "LibBiz\LibBiz.csproj", "{44160EB6-9096-4AE8-8A63-A78AB23D1883}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibBiz", "LibBiz\LibBiz.csproj", "{44160EB6-9096-4AE8-8A63-A78AB23D1883}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "WebApi\WebApi.csproj", "{7DA83158-D475-4830-AC9E-44D291FE1500}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "WebApi\WebApi.csproj", "{7DA83158-D475-4830-AC9E-44D291FE1500}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI", "UI\UI.csproj", "{BFDA49D1-F0C7-4208-A8A7-C9BDAB7D38B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UI", "UI\UI.csproj", "{BFDA49D1-F0C7-4208-A8A7-C9BDAB7D38B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

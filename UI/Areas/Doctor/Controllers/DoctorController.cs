@@ -9,9 +9,12 @@ using System.Net;
 using UI.Models;
 using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace UI.Areas.Doctor.Controllers
 {
+
     public class DoctorController : Controller
     {
         private ILogger<DoctorController> _logger;
@@ -24,6 +27,7 @@ namespace UI.Areas.Doctor.Controllers
             _client = new HttpClient();
             _client.BaseAddress = new Uri("https://localhost:44364/api/");
         }
+
 
         [HttpGet]
         public IActionResult DoctorDashboard()
@@ -42,9 +46,11 @@ namespace UI.Areas.Doctor.Controllers
 
                 if (doctor != null)
                 {
-                    var user = new LibBiz.Models.Doctor()
+                    var user = new DoctorViewModel()
                     {
                         // Preencha as propriedades de DoctorInfoViewModel com os dados do médico
+                        UserId = doctor.UserId,
+                        RoleId = doctor.RoleId,
                         Name = doctor.Name,
                         Email = userEmail,
                         Phone = doctor.Phone,
@@ -82,9 +88,15 @@ namespace UI.Areas.Doctor.Controllers
 
                 if (doctor != null)
                 {
-                    var user = new LibBiz.Models.Doctor()
+                    if (doctor.Photograph == null)
+                    {
+                        doctor.Photograph = new Photograph();
+                    }
+                    var user = new DoctorViewModel()
                     {
                         // Preencha as propriedades de DoctorInfoViewModel com os dados do médico
+                        UserId = doctor.UserId,
+                        RoleId = doctor.RoleId,
                         Name = doctor.Name,
                         Email = userEmail,
                         Phone = doctor.Phone,
@@ -92,9 +104,9 @@ namespace UI.Areas.Doctor.Controllers
                         Region = doctor.Region,
                         City = doctor.City,
                         SpecializationName = doctor.SpecializationName,
-                        Price = (int)doctor.Price
+                        Price = (int)doctor.Price,
+                        ImageData = doctor.Photograph.ImageData
                     };
-
                     // Renderize a página DoctorProfile com as informações do médico
                     return View(user);
                 }
@@ -105,6 +117,7 @@ namespace UI.Areas.Doctor.Controllers
                 }
             }
         }
+
         [HttpGet]
         public IActionResult DoctorSpecialization()
         {
@@ -122,17 +135,12 @@ namespace UI.Areas.Doctor.Controllers
 
                 if (doctor != null)
                 {
-                    var user = new LibBiz.Models.Doctor()
+                    var user = new DoctorViewModel()
                     {
                         // Preencha as propriedades de DoctorInfoViewModel com os dados do médico
-                        Name = doctor.Name,
-                        Email = userEmail,
-                        Phone = doctor.Phone,
-                        Address = doctor.Address,
-                        Region = doctor.Region,
-                        City = doctor.City,
+                        UserId = doctor.UserId,
+                        RoleId = doctor.RoleId,
                         SpecializationName = doctor.SpecializationName,
-                        Price = (int)doctor.Price
                     };
 
                     // Renderize a página DoctorProfile com as informações do médico
@@ -143,8 +151,8 @@ namespace UI.Areas.Doctor.Controllers
                     return RedirectToAction("Error", "Home");
                 }
             }
-
         }
+
         [HttpGet]
         public IActionResult DoctorClinic()
         {
@@ -162,17 +170,13 @@ namespace UI.Areas.Doctor.Controllers
 
                 if (doctor != null)
                 {
-                    var user = new LibBiz.Models.Doctor()
+                    var user = new DoctorViewModel()
                     {
                         // Preencha as propriedades de DoctorInfoViewModel com os dados do médico
-                        Name = doctor.Name,
-                        Email = userEmail,
-                        Phone = doctor.Phone,
+                        UserId = doctor.UserId,
                         Address = doctor.Address,
                         Region = doctor.Region,
-                        City = doctor.City,
-                        SpecializationName = doctor.SpecializationName,
-                        Price = (int)doctor.Price
+                        City = doctor.City
                     };
 
                     // Renderize a página DoctorProfile com as informações do médico
@@ -183,8 +187,8 @@ namespace UI.Areas.Doctor.Controllers
                     return RedirectToAction("Error", "Home");
                 }
             }
-
         }
+
         [HttpGet]
         public IActionResult DoctorFees()
         {
@@ -202,17 +206,10 @@ namespace UI.Areas.Doctor.Controllers
 
                 if (doctor != null)
                 {
-                    var user = new LibBiz.Models.Doctor()
+                    var user = new DoctorViewModel()
                     {
-                        // Preencha as propriedades de DoctorInfoViewModel com os dados do médico
-                        Name = doctor.Name,
-                        Email = userEmail,
-                        Phone = doctor.Phone,
-                        Address = doctor.Address,
-                        Region = doctor.Region,
-                        City = doctor.City,
-                        SpecializationName = doctor.SpecializationName,
-                        Price = (int)doctor.Price
+                        UserId = doctor.UserId,
+                        Price= (int)doctor.Price
                     };
 
                     // Renderize a página DoctorProfile com as informações do médico
@@ -223,7 +220,6 @@ namespace UI.Areas.Doctor.Controllers
                     return RedirectToAction("Error", "Home");
                 }
             }
-
         }
 
         [HttpGet]
@@ -231,13 +227,6 @@ namespace UI.Areas.Doctor.Controllers
         {
             List<string> doctorsWithSpecialization = _BM.GetAllSpecializations();
             return Ok(doctorsWithSpecialization);
-        }
-
-        [HttpPut]
-        public IActionResult UpdateDoctor(LibBiz.Models.Doctor updatedDoctor)
-        {
-            LibBiz.Models.Doctor doctor = _BM.UpdateDoctor(updatedDoctor);
-            return Ok(doctor);
         }
 
         [HttpGet]
@@ -253,12 +242,72 @@ namespace UI.Areas.Doctor.Controllers
             LibBiz.Models.Doctor doctor = _BM.GetDoctorById(id);
             return Ok(doctor);
         }
-        [HttpPut]
-        public IActionResult UpdatePatient(LibBiz.Models.Patient updatedPatient)
+
+        [HttpPost]
+        public IActionResult UploadProfilePicture(int doctorId, IFormFile profilePicture)
         {
-            LibBiz.Models.Patient patient = _BM.UpdatePatient(updatedPatient);
-            return Ok(patient);
+            // Recupere o médico do banco de dados com base no ID ou na sessão
+            var doctor = _BM.GetDoctorById(doctorId);
+
+            if (doctor != null && profilePicture != null && profilePicture.Length > 0)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    profilePicture.CopyTo(ms);
+                    doctor.Photograph = new Photograph
+                    {
+                        UserId = doctor.UserId,
+                        ImageData = ms.ToArray()
+                    };
+                    _BM.UpdateDoctorPhoto(doctor);
+                }
+                // Atualize o médico no banco de dados para incluir a foto
+
+                return RedirectToAction("DoctorProfile");
+            }
+
+            return RedirectToAction("DoctorProfile"); // Trate os casos de erro adequadamente
         }
+
+        [HttpPost]
+        public IActionResult UpdateDoctorInfo(int doctorId, string name, string phone)
+        {
+            var doctor = _BM.UpdateDoctorInfo(doctorId, name, phone);
+            return RedirectToAction("DoctorProfile");
+
+        }
+
+        [HttpPost]
+        public IActionResult UpdateDoctorSpecialization(int doctorId, string specializationName)
+        {
+            var doctor = _BM.UpdateDoctorSpecialization(doctorId, specializationName);
+            return RedirectToAction("DoctorSpecialization");
+
+        }
+
+        [HttpPost]
+        public IActionResult UpdateDoctorClinic(int doctorId, string address, string region, string city)
+        {
+            var doctor = _BM.UpdateDoctorClinic(doctorId, address, region, city);
+            return RedirectToAction("DoctorClinic");
+
+        }
+
+        [HttpPost]
+        public IActionResult UpdateDoctorFees(int doctorId, int price)
+        {
+            var doctor = _BM.UpdateDoctorFees(doctorId, price);
+            return RedirectToAction("DoctorFees");
+
+        }
+        [HttpPost]
+        public IActionResult UpdateDoctorPassword(int doctorId, string password, string newpassword)
+        {
+            var doctor = _BM.UpdateDoctorPassword(doctorId, password, newpassword);
+            return RedirectToAction("DoctorProfile");
+
+        }
+
 
     }
 }

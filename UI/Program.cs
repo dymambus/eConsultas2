@@ -3,9 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using UI.Controllers;
 using Microsoft.Extensions.Configuration;
 using Serilog;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Logging
 var logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .CreateLogger();
@@ -16,8 +20,8 @@ builder.Logging.AddSerilog(logger);
 builder.Services.AddControllersWithViews();
 
 // Mudar connection string
-builder.Services.AddDbContext<ddContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Dmytro"), b => b.MigrationsAssembly("UI")));
-//builder.Services.AddDbContext<ddContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectioneConsultas"), b => b.MigrationsAssembly("UI")));
+//builder.Services.AddDbContext<ddContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Dmytro"), b => b.MigrationsAssembly("UI")));
+builder.Services.AddDbContext<ddContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectioneConsultas"), b => b.MigrationsAssembly("UI")));
 
 builder.Services.AddDistributedMemoryCache();
 
@@ -25,10 +29,20 @@ builder.Services.AddScoped<Gateway>();
 
 builder.Services.AddScoped<IBusinessMethods, BusinessMethodsImpl>();
 
-// Adicione a configuração da sessão
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    // Configure JWT authentication options here
+});
+
+// Adicione a configuraï¿½ï¿½o da sessï¿½o
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(1);
+    options.IdleTimeout = TimeSpan.FromMinutes(20);
 });
 
 var app = builder.Build();
@@ -40,10 +54,13 @@ if (!app.Environment.IsDevelopment())
 }
 app.UseStaticFiles();
 
-// Adicione o middleware de sessão
+// Adicione o middleware de sessï¿½o
 app.UseSession();
 
 app.UseRouting();
+
+app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllerRoute(

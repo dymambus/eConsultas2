@@ -1,4 +1,4 @@
-﻿using LibBiz.Data;
+using LibBiz.Data;
 using LibBiz.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -59,11 +59,6 @@ namespace UI.Controllers
             return Unauthorized(new { message = "Credenciais inválidas" });
         }
 
-        public IActionResult SignOut()
-        {
-            return RedirectToAction("Login", "Auth");
-        }
-
         private bool VerifyPassword(User user, string password)
         {
             return user.Password == password;
@@ -89,6 +84,18 @@ namespace UI.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        public IActionResult LogOut()
+        {
+
+            HttpContext.Session.Remove("Token");
+            HttpContext.Session.Remove("Email");
+
+
+            return RedirectToAction("Login", "Auth");
+        }
+
+
 
         [HttpGet]
         public IActionResult Register()
