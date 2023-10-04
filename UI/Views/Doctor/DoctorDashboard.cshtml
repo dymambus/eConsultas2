@@ -1,40 +1,72 @@
-﻿@model DoctorViewModel
+﻿@model DoctorDashboardViewModel
+
 
 @section CustomCSS{
-
     <link href="~/doctor/dashboard.css" rel="stylesheet" />
-
 }
 
 <partial name="_Header" />
 
 <div class="container-fluid">
-
     <div class="row">
-
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-
             <partial name="_Menu" />
 
-            <h2>Bem vindo Dr. @Model.Name</h2>
+            <h2>Bem vindo Dr. @Model.Doctor.Name</h2>
 
+            <h4>Your Appointments:</h4>
+            @if (Model != null)
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Patient Phone</th>
+                            <th>Patient Name</th>
+                            <th>Fees Paid</th>
+                            <th>Patient Message</th>
+                            <th>Doctor Message</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var appointmentViewModel in Model.Appointments)
+                        {
+                            <tr>
+                                <td>@appointmentViewModel.Status</td>
+                                <td>@appointmentViewModel.Date</td>
+                                <td>@appointmentViewModel.PatientPhone</td>
+                                <td>@appointmentViewModel.PatientName</td>
+                                <td>@appointmentViewModel.FeesPaid</td>
+                                <td>@appointmentViewModel.PatientMessage</td>
+                                <td>@appointmentViewModel.DoctorMessage</td>
+                                <td>
+                                    @if (appointmentViewModel.Status)
+                                    {
+                                        <a href="@(Url.Action("CloseAppointment", "Doctor", new { appointmentId = appointmentViewModel.Id }))">Close</a>
+                                    }
+                                    <a href="@(Url.Action("ConsultationDetails", "Doctor", new { appointmentId = appointmentViewModel.Id }))">More</a>
+                                </td>
+                            </tr>
+                        }
 
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>You don't have any appointments yet.</p>
+            }
         </main>
-
-
-
     </div>
 </div>
 <partial name="_Footer" />
 
 @section CustomJS{
-
     <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script>
 
     <script src="~/doctor/dashboard.js"></script>
-
 }
-
-

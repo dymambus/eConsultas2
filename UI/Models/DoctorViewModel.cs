@@ -21,5 +21,6 @@ namespace UI.Models
         public int? Price { get; set; }
         public Photograph? Photograph { get; set; }
         public byte[]? ImageData { get; set; }
+        public List<Appointment>? Appointments { get; set; }
     }
 }

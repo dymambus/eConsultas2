@@ -40,28 +40,44 @@ namespace UI.Areas.Doctor.Controllers
             {
                 var userEmail = HttpContext.Session.GetString("Email");
 
-                // Consulte o banco de dados para obter as informações do médico com base no email
+                // Consulte o banco de dados para obter as consultas do médico com base no email
                 var doctor = _BM.GetDoctorByEmail(userEmail);
 
                 if (doctor != null)
                 {
-                    var user = new DoctorViewModel()
+                    // Consulta as consultas do médico
+                    var appointments = _BM.GetAppointmentsByDoctorId(doctor.UserId);
+
+                    // Crie uma instância de DoctorDashboardViewModel e preencha as propriedades Doctor e Appointments
+                    var dashboardViewModel = new DoctorDashboardViewModel
                     {
-                        // Preencha as propriedades de DoctorInfoViewModel com os dados do médico
-                        UserId = doctor.UserId,
-                        RoleId = doctor.RoleId,
-                        Name = doctor.Name,
-                        Email = userEmail,
-                        Phone = doctor.Phone,
-                        Address = doctor.Address,
-                        Region = doctor.Region,
-                        City = doctor.City,
-                        SpecializationName = doctor.SpecializationName,
-                        Price = (int)doctor.Price
+                        Doctor = new DoctorViewModel
+                        {
+                            // Preencha as propriedades do médico a partir do objeto 'doctor'
+                            UserId = doctor.UserId,
+                            Email = doctor.Email,
+                            Name = doctor.Name,
+                            // Outras propriedades do médico
+                        },
+                        Appointments = appointments.Select(appointment => new AppointmentViewModel
+                        {
+                            // Preencha as propriedades das consultas a partir dos objetos 'appointments'
+                            Id = appointment.Id,
+                            Date = appointment.Date,
+                            Status = appointment.IsDone,
+                            PatientName = appointment.Patient.Name,
+                            DoctorName = appointment.Doctor.Name,
+                            PatientPhone = appointment.Patient.Phone,
+                            FeesPaid = appointment.Price,
+                            PatientMessage = appointment.PatientMessage,
+                            DoctorMessage = appointment.DoctorMessage
+
+                            // Outras propriedades das consultas
+                        }).ToList()
                     };
 
-                    // Renderize a página DoctorProfile com as informações do médico
-                    return View(user); // Certifique-se de que está direcionando para a ação correta
+                    // Agora você tem a ViewModel composta pronta para exibição na página
+                    return View(dashboardViewModel);
                 }
                 else
                 {
@@ -69,6 +85,9 @@ namespace UI.Areas.Doctor.Controllers
                 }
             }
         }
+
+
+
 
         [HttpGet]
         public IActionResult DoctorProfile()

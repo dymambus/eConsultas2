@@ -12,8 +12,8 @@ namespace LibBiz.Models
         public int Id { get; set; }
         public Patient Patient { get; set; }
         public Doctor Doctor { get; set; }
-        public bool? IsDone { get; set; } = false;
-        public DateTime? Date { get; set; }
+        public bool IsDone { get; set; } = false;
+        public DateTime Date { get; set; }
         public int? Price { get; set; }
         public string? PatientMessage { get; set; }
         public Attach? Attach { get; set; }
