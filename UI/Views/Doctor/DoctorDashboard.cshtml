@@ -1,4 +1,4 @@
-﻿@model DoctorDashboardViewModel
+﻿@model DoctorConsultationViewModel
 
 
 @section CustomCSS{
@@ -44,9 +44,11 @@
                                 <td>
                                     @if (appointmentViewModel.Status)
                                     {
-                                        <a href="@(Url.Action("CloseAppointment", "Doctor", new { appointmentId = appointmentViewModel.Id }))">Close</a>
+                                        <a href="@(Url.Action("CloseAppointment", "Doctor", new { appointmentId = appointmentViewModel.Id, userEmail = Model.Doctor.Email }))">Close</a>
                                     }
-                                    <a href="@(Url.Action("ConsultationDetails", "Doctor", new { appointmentId = appointmentViewModel.Id }))">More</a>
+                                    <a href='@(Url.Action("DoctorConsultation", "Doctor", new { appointmentId = appointmentViewModel.Id, userEmail = Model.Doctor.Email }))'>More</a>
+
+
                                 </td>
                             </tr>
                         }

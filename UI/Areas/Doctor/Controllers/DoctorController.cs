@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Numerics;
 
 namespace UI.Areas.Doctor.Controllers
 {
@@ -49,7 +50,7 @@ namespace UI.Areas.Doctor.Controllers
                     var appointments = _BM.GetAppointmentsByDoctorId(doctor.UserId);
 
                     // Crie uma instância de DoctorDashboardViewModel e preencha as propriedades Doctor e Appointments
-                    var dashboardViewModel = new DoctorDashboardViewModel
+                    var dashboardViewModel = new DoctorConsultationViewModel
                     {
                         Doctor = new DoctorViewModel
                         {
@@ -85,9 +86,6 @@ namespace UI.Areas.Doctor.Controllers
                 }
             }
         }
-
-
-
 
         [HttpGet]
         public IActionResult DoctorProfile()
@@ -242,6 +240,62 @@ namespace UI.Areas.Doctor.Controllers
                 }
             }
         }
+
+        [HttpGet]
+        public IActionResult DoctorConsultation(int appointmentId, string userEmail)
+        {
+            var token = HttpContext.Session.GetString("Token");
+            if (token == null)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+
+            var doctor = _BM.GetDoctorByEmail(userEmail);
+            var appointment = _BM.GetAppointmentById(appointmentId);
+
+            if (doctor == null || appointment == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            var dashboardViewModel = CreateDoctorConsultationViewModel(doctor, appointmentId);
+
+            return View(dashboardViewModel);
+        }
+
+        public DoctorConsultationViewModel CreateDoctorConsultationViewModel(LibBiz.Models.Doctor doctor, int selectedAppointmentId)
+        {
+            var appointments = _BM.GetAppointmentsByDoctorId(doctor.UserId);
+
+            var dashboardViewModel = new DoctorConsultationViewModel
+            {
+                SelectedAppointmentId = selectedAppointmentId, // Defina o ID da consulta selecionada
+                Doctor = new DoctorViewModel
+                {
+                    UserId = doctor.UserId,
+                    Email = doctor.Email,
+                    Name = doctor.Name,
+                    // Outras propriedades do médico
+                },
+                Appointments = appointments.Select(appointment => new AppointmentViewModel
+                {
+                    Id = appointment.Id,
+                    Date = appointment.Date,
+                    Status = appointment.IsDone,
+                    PatientName = appointment.Patient.Name,
+                    DoctorName = appointment.Doctor.Name,
+                    PatientPhone = appointment.Patient.Phone,
+                    FeesPaid = appointment.Price,
+                    PatientMessage = appointment.PatientMessage,
+                    DoctorMessage = appointment.DoctorMessage
+                    // Outras propriedades das consultas
+                }).ToList()
+            };
+
+            return dashboardViewModel;
+        }
+
+
 
         [HttpGet]
         public IActionResult GetAllSpecialization()

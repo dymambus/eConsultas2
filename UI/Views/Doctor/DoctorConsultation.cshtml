@@ -1,4 +1,9 @@
-﻿@model LibBiz.Models.Doctor
+﻿@model DoctorConsultationViewModel
+
+@{
+    ViewData["Title"] = "Consultation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 
 <div class="container">
 
@@ -6,7 +11,34 @@
 
         <partial name="_Header" />
 
-        <h2>Consultation with (Dr.)@Model.Name</h2>
+        <h2>Consultation with (Dr.)@Model.Doctor.Name</h2>
+
+        <p>
+            <b>Nome do Paciente:</b>
+            @Model.Appointments.Single(a => a.Id == Model.SelectedAppointmentId).PatientName
+        </p>
+
+        <p>
+            <b>Preço:</b>
+        @Model.Appointments.Single(a => a.Id == Model.SelectedAppointmentId).FeesPaid €</p>
+
+        
+        <div class="form-group mb-3">
+            <p><b>Mensagem do Paciente:</b></p>
+            <textarea asp-for="@Model.Appointments.Single(a => a.Id == Model.SelectedAppointmentId).PatientMessage" class="form-control" placeholder="Mensagem do Paciente" rows="4"></textarea>
+        </div>
+        
+
+        <p>Attachment do Paciente:<a href="@Url.Action("DownloadAttachment", "Doctor", new { appointmentId = Model.SelectedAppointmentId })">Download Attachment</a></p>
+     
+        <form>
+            <div class="form-group mb-3">
+                <p><b>Resposta do Médico:</b></p>
+                <textarea asp-for="@Model.Appointments.Single(a => a.Id == Model.SelectedAppointmentId).DoctorMessage" class="form-control" placeholder="Mensagem do Médico" rows="4"></textarea>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="submitResponse()">Enviar Resposta</button>
+        </form>
+        <a asp-controller="Doctor" asp-action="DoctorDashboard" class="btn btn-secondary">Voltar</a>
 
 
 
