@@ -28,7 +28,6 @@ namespace UI.Areas.Doctor.Controllers
             _client.BaseAddress = new Uri("https://localhost:44364/api/");
         }
 
-
         [HttpGet]
         public IActionResult DoctorDashboard()
         {
@@ -70,6 +69,7 @@ namespace UI.Areas.Doctor.Controllers
                 }
             }
         }
+
         [HttpGet]
         public IActionResult DoctorProfile()
         {
@@ -141,6 +141,7 @@ namespace UI.Areas.Doctor.Controllers
                         UserId = doctor.UserId,
                         RoleId = doctor.RoleId,
                         SpecializationName = doctor.SpecializationName,
+                        SpecializationDescription = doctor.SpecializationDescription
                     };
 
                     // Renderize a página DoctorProfile com as informações do médico
@@ -209,7 +210,8 @@ namespace UI.Areas.Doctor.Controllers
                     var user = new DoctorViewModel()
                     {
                         UserId = doctor.UserId,
-                        Price= (int)doctor.Price
+                        Price= (int)doctor.Price,
+                        PriceNotes = doctor.PriceDescription
                     };
 
                     // Renderize a página DoctorProfile com as informações do médico
@@ -300,6 +302,7 @@ namespace UI.Areas.Doctor.Controllers
             return RedirectToAction("DoctorFees");
 
         }
+
         [HttpPost]
         public IActionResult UpdateDoctorPassword(int doctorId, string password, string newpassword)
         {
@@ -307,7 +310,5 @@ namespace UI.Areas.Doctor.Controllers
             return RedirectToAction("DoctorProfile");
 
         }
-
-
     }
 }

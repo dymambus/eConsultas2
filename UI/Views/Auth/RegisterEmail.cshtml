@@ -1,0 +1,22 @@
+﻿@model UserEmailViewModel
+
+<h1>Registro (Passo 1)</h1>
+
+<form asp-action="RegisterEmail" method="post">
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" class="form-control" id="email" name="email" required>
+    </div>
+    <div class="form-group">
+        <label>Selecione o tipo de usuário:</label>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="RoleId" id="role-patient" value="0" required>
+            <label class="form-check-label" for="role-patient">Paciente</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="RoleId" id="role-doctor" value="1" required>
+            <label class="form-check-label" for="role-doctor">Médico</label>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Próximo</button>
+</form>

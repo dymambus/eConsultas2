@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@section CustomCSS{
+
+    <link href="starter-template.css" rel="stylesheet" />
+
+}
+
+<div class="col-lg-8 mx-auto p-3 py-md-5">
+    <main>
+        <h1>Bem Vindos ao eConsultas</h1>
+        <p class="fs-5 col-md-8">De forma a conseguir aceder a toda a informação, terá que fazer o</p>
+        <a asp-controller="Auth" asp-action="Login" class="btn btn-primary btn-lg px-4">Login</a>
+
+        <p>Não está registado? Clique</p>
+        <a asp-controller="Auth" asp-action="RegisterEmail" class="btn btn-primary btn-lg px-4">Aqui</a>
+    </main>
+    <footer class="pt-5 my-5 text-muted border-top">
+        Created by Daniel &amp; Dmytro &middot; &copy; 2023
+    </footer>
+</div>

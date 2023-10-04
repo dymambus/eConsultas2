@@ -36,7 +36,7 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    // Configure JWT authentication options here
+    
 });
 
 // Adicione a configuração da sessão

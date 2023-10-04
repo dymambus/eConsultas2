@@ -16,6 +16,8 @@ namespace UI.Models
         public string? City { get; set; }
         public string? Address { get; set; }
         public string? SpecializationName { get; set; }
+        public string? SpecializationDescription { get; set; }
+        public string? PriceNotes { get; set; }
         public int? Price { get; set; }
         public Photograph? Photograph { get; set; }
         public byte[]? ImageData { get; set; }
