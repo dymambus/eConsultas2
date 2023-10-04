@@ -33,8 +33,21 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
+    options.RequireHttpsMetadata = false; // Defina como true em ambiente de produção
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true, // Valide o emissor do token
+        ValidateAudience = true, // Valide a audiência do token
+        ValidateLifetime = true, // Valide o tempo de vida do token
+        ValidateIssuerSigningKey = true, // Valide a chave de assinatura
 
+        ValidIssuer = builder.Configuration["Jwt:Issuer"], // Defina o emissor (issuer) válido
+        ValidAudience = builder.Configuration["Jwt:Audience"], // Defina a audiência válida
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])), // Defina a chave secreta usada para assinar os tokens
+    };
 });
+
 
 // Adicione a configuração da sessão
 builder.Services.AddSession(options =>
