@@ -9,24 +9,21 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Logging
+#if CNSTRING_DANIEL
+builder.Services.AddDbContext<ddContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectioneConsultas"), b => b.MigrationsAssembly("UI")));
+#else
+builder.Services.AddDbContext<ddContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Dmytro"), b => b.MigrationsAssembly("UI")));
+#endif
+
 var logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .CreateLogger();
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
-
-// Mudar connection string
-//builder.Services.AddDbContext<ddContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("Dmytro"), b => b.MigrationsAssembly("UI")));
-builder.Services.AddDbContext<ddContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectioneConsultas"), b => b.MigrationsAssembly("UI")));
-
 builder.Services.AddDistributedMemoryCache();
-
 builder.Services.AddScoped<Gateway>();
-
 builder.Services.AddScoped<IBusinessMethods, BusinessMethodsImpl>();
 
 builder.Services.AddAuthentication(options =>
@@ -36,7 +33,7 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    
+
 });
 
 // Adicione a configuração da sessão
@@ -47,7 +44,6 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
