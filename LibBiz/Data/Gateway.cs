@@ -70,6 +70,8 @@ namespace LibBiz.Data
         public Appointment UpdateAppointment(int appointmentId, string? doctorMessage = null);
         public Appointment GetAppointmentById(int appointmentId);
 
+        // Patient CRUD
+        public Patient? P_Update(Patient patient);
     }
 
     public class BusinessMethodsImpl : IBusinessMethods
@@ -79,6 +81,28 @@ namespace LibBiz.Data
         {
             _context = context;
         }
+
+        // Patient CRUD
+        public Patient? P_Update(Patient newPatient)
+        {
+            var oldPatient = _context.Patients.Find(newPatient.UserId);
+
+            if (oldPatient == null)
+            {
+                throw new Exception("Médico não encontrado");
+            }
+
+            oldPatient.Email = newPatient.Email;
+            oldPatient.Phone = newPatient.Phone;
+            oldPatient.Name = newPatient.Name;
+            oldPatient.UserId = newPatient.UserId;
+            oldPatient.RoleId = newPatient.RoleId;
+
+            _context.SaveChanges();
+
+            return newPatient;
+        }
+
         public List<Appointment> GetAppointmentsByDoctorId(int userId)
         {
             var query = _context.Appointments
@@ -299,7 +323,7 @@ namespace LibBiz.Data
             {
                 throw new Exception("Médico não encontrado");
             }
-            if (oldpassword==existingDoctor.Password)
+            if (oldpassword == existingDoctor.Password)
             {
                 existingDoctor.Password = newpassword;
             }

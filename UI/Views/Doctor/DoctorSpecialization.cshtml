@@ -18,15 +18,6 @@
 
             <h2 class="m-3">My Specialization</h2>
 
-            @if (TempData.ContainsKey("Message"))
-            {
-                <div class="alert alert-danger" role="alert">
-
-                    @TempData["Message"]
-
-                </div>
-            }
-
             <form asp-asp-controller="Doctor" asp-action="UpdateDoctorSpecialization" method="post" enctype="multipart/form-data">
                 <input hidden name="doctorId" value="@Model.UserId" />
                 <div class="form-group mb-3">

@@ -34,7 +34,10 @@ namespace UI.Areas.Patient.Controllers
                 {
                     Name = patient.Name,
                     Email = patient.Email,
-                    Phone = patient.Phone
+                    Phone = patient.Phone,
+                    UserId = patient.UserId,
+                    RoleId = patient.RoleId,
+                    Password = patient.Password
                 };
 
                 return user;
@@ -61,13 +64,26 @@ namespace UI.Areas.Patient.Controllers
         [HttpGet]
         public IActionResult Profile()
         {
-            PatientAreaModel patient = new()
+            P_ProfileModel currPatient = new()
             {
                 Patient = GetPatient()
             };
 
 
-            return View(patient);
+            return View(currPatient);
+        }
+
+        [HttpPost]
+        public IActionResult P_UpdateProfile(P_ProfileModel model)
+        {
+            var patient = GetPatient();
+
+            patient.Name = model.Patient.Name;
+            patient.Phone = model.Patient.Phone;
+
+            _BM.P_Update(patient);
+
+            return RedirectToAction("Profile");
         }
 
         [HttpGet]
