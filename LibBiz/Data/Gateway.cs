@@ -44,8 +44,6 @@ namespace LibBiz.Data
             _context.Users.Remove(user);
             _context.SaveChanges();
         }
-
-
     }
 
     public interface IBusinessMethods
@@ -62,9 +60,9 @@ namespace LibBiz.Data
         public List<Appointment> GetAppointmentsByDoctorId(int userId);
         public Doctor UpdateDoctorPhoto(Doctor doctor);
         public Doctor UpdateDoctor(Doctor updatedDoctor);
-        public Doctor UpdateDoctorSpecialization(int doctorId, string specialization);
+        public Doctor UpdateDoctorSpecialization(int doctorId, string specialization, string? message);
         public Doctor UpdateDoctorClinic(int doctorId, string address, string region, string city);
-        public Doctor UpdateDoctorFees(int doctorId, int fees);
+        public Doctor UpdateDoctorFees(int doctorId, int fees, string PriceNotes);
         public Doctor UpdateDoctorPassword(int doctorId, string oldpassword, string newpassword);
         public Patient? GetPatientByEmail(string? email);
         public Appointment UpdateAppointment(int appointmentId, string? doctorMessage = null);
@@ -147,16 +145,6 @@ namespace LibBiz.Data
 
             return doctor;
         }
-        //public List<Appointment> GetAppointmentById(int appointmentId)
-        //{
-        //    var query = _context.Appointments
-        //        .Include(x => x.Doctor)
-        //        .Include(x => x.Patient)
-        //        .Where(x => x.Id == appointmentId);
-
-        //    return query.ToList();
-        //}
-
         public Appointment GetAppointmentById(int appointmentId)
         {
             var query = _context.Appointments
@@ -242,7 +230,7 @@ namespace LibBiz.Data
 
             return updatedPatient;
         }
-        public Appointment CreateAppointment(int doctorId, int patientId, string? patientMessage = null)
+        public Appointment CreateAppointment(int doctorId, int patientId, string? patientMessage)
         {
             var doctor = _context.Doctors.Find(doctorId);
             var patient = _context.Patients.Find(patientId);
@@ -272,7 +260,7 @@ namespace LibBiz.Data
 
             return appointment;
         }
-        public Doctor UpdateDoctorSpecialization(int doctorId, string specialization)
+        public Doctor UpdateDoctorSpecialization(int doctorId, string specialization, string? s)
         {
             var existingDoctor = _context.Doctors.Find(doctorId);
             if (existingDoctor == null)
@@ -280,12 +268,12 @@ namespace LibBiz.Data
                 throw new Exception("Médico não encontrado");
             }
             existingDoctor.SpecializationName = specialization;
+            existingDoctor.SpecializationDescription = s;
 
             _context.SaveChanges();
 
             return existingDoctor;
         }
-
         public Doctor UpdateDoctorClinic(int doctorId, string address, string region, string city)
         {
             var existingDoctor = _context.Doctors.Find(doctorId);
@@ -301,8 +289,7 @@ namespace LibBiz.Data
 
             return existingDoctor;
         }
-
-        public Doctor UpdateDoctorFees(int doctorId, int fees)
+        public Doctor UpdateDoctorFees(int doctorId, int fees, string PriceNotes)
         {
             var existingDoctor = _context.Doctors.Find(doctorId);
             if (existingDoctor == null)
@@ -310,12 +297,12 @@ namespace LibBiz.Data
                 throw new Exception("Médico não encontrado");
             }
             existingDoctor.Price = fees;
+            existingDoctor.PriceDescription = PriceNotes;
 
             _context.SaveChanges();
 
             return existingDoctor;
         }
-
         public Doctor UpdateDoctorPassword(int doctorId, string oldpassword, string newpassword)
         {
             var existingDoctor = _context.Doctors.Find(doctorId);
@@ -336,7 +323,6 @@ namespace LibBiz.Data
 
             return existingDoctor;
         }
-
         public Appointment UpdateAppointment(int appointmentId, string? doctorMessage)
         {
             var existingAppointment = _context.Appointments.Find(appointmentId);

@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public DateTime Date { get; set; }
-        public bool Status { get; set; } // Aberto ou concluído
+        public bool IsDone { get; set; } // Aberto ou concluído
         public string PatientName { get; set; }
         public string DoctorName { get; set; }
         public string PatientPhone { get; set; }

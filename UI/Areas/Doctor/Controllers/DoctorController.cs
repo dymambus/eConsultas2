@@ -65,7 +65,7 @@ namespace UI.Areas.Doctor.Controllers
                             // Preencha as propriedades das consultas a partir dos objetos 'appointments'
                             Id = appointment.Id,
                             Date = appointment.Date,
-                            Status = appointment.IsDone,
+                            IsDone = appointment.IsDone,
                             PatientName = appointment.Patient.Name,
                             DoctorName = appointment.Doctor.Name,
                             PatientPhone = appointment.Patient.Phone,
@@ -281,7 +281,7 @@ namespace UI.Areas.Doctor.Controllers
                 {
                     Id = appointment.Id,
                     Date = appointment.Date,
-                    Status = appointment.IsDone,
+                    IsDone = appointment.IsDone,
                     PatientName = appointment.Patient.Name,
                     DoctorName = appointment.Doctor.Name,
                     PatientPhone = appointment.Patient.Phone,
@@ -294,8 +294,6 @@ namespace UI.Areas.Doctor.Controllers
 
             return dashboardViewModel;
         }
-
-
 
         [HttpGet]
         public IActionResult GetAllSpecialization()
@@ -353,9 +351,9 @@ namespace UI.Areas.Doctor.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateDoctorSpecialization(int doctorId, string specializationName)
+        public IActionResult UpdateDoctorSpecialization(int doctorId, string specializationName, string SpecializationDescription)
         {
-            var doctor = _BM.UpdateDoctorSpecialization(doctorId, specializationName);
+            var doctor = _BM.UpdateDoctorSpecialization(doctorId, specializationName, SpecializationDescription);
             return RedirectToAction("DoctorSpecialization");
 
         }
@@ -369,9 +367,9 @@ namespace UI.Areas.Doctor.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateDoctorFees(int doctorId, int price)
+        public IActionResult UpdateDoctorFees(int doctorId, int price, string PriceNotes)
         {
-            var doctor = _BM.UpdateDoctorFees(doctorId, price);
+            var doctor = _BM.UpdateDoctorFees(doctorId, price, PriceNotes);
             return RedirectToAction("DoctorFees");
 
         }
@@ -402,6 +400,27 @@ namespace UI.Areas.Doctor.Controllers
             return RedirectToAction("DoctorConsultation", new { appointmentId = appointmentId, userEmail = appointment.Doctor.Email });
         }
 
+        [HttpPost]
+        public IActionResult CloseAppointment(int appointmentId)
+        {
+            var appointment = _BM.GetAppointmentById(appointmentId);
+
+            if (appointment == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            // Verifique se a consulta está "em aberto" antes de fechá-la
+            if (!appointment.IsDone)
+            {
+                // Atualize o status da consulta para "concluído"
+                appointment.IsDone = true;
+                _BM.UpdateAppointment(appointment.Id, appointment.DoctorMessage);
+            }
+
+            // Redirecione de volta à página de detalhes da consulta
+            return RedirectToAction("DoctorConsultation", new { appointmentId = appointmentId, userEmail = appointment.Doctor.Email });
+        }
 
 
     }
