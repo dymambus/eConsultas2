@@ -34,7 +34,7 @@
                         @foreach (var appointmentViewModel in Model.Appointments)
                         {
                             <tr>
-                                <td>@appointmentViewModel.Status</td>
+                                <td>@appointmentViewModel.IsDone</td>
                                 <td>@appointmentViewModel.Date</td>
                                 <td>@appointmentViewModel.PatientPhone</td>
                                 <td>@appointmentViewModel.PatientName</td>
@@ -42,17 +42,24 @@
                                 <td>@appointmentViewModel.PatientMessage</td>
                                 <td>@appointmentViewModel.DoctorMessage</td>
                                 <td>
-                                    @if (appointmentViewModel.Status)
+                                    @if (!appointmentViewModel.IsDone)
                                     {
-                                        <a href="@(Url.Action("CloseAppointment", "Doctor", new { appointmentId = appointmentViewModel.Id, userEmail = Model.Doctor.Email }))">Close</a>
+                                        <a asp-controller="Doctor" asp-action="DoctorConsultation" asp-route-appointmentId="@appointmentViewModel.Id" asp-route-userEmail="@Model.Doctor.Email" class="btn btn-primary">Consultar</a>
+                                        <form asp-asp-controller="Doctor" asp-action="CloseAppointment" method="post" enctype="multipart/form-data">
+                                            <input hidden name="appointmentId" value="@appointmentViewModel.Id" />
+
+                                            <button type="submit" class="btn btn-danger">Fechar</button>
+
+                                        </form>
+
                                     }
-                                    <a href='@(Url.Action("DoctorConsultation", "Doctor", new { appointmentId = appointmentViewModel.Id, userEmail = Model.Doctor.Email }))'>More</a>
-
-
+                                    else
+                                    {
+                                        <a asp-controller="Doctor" asp-action="DoctorConsultation" asp-route-appointmentId="@appointmentViewModel.Id" asp-route-userEmail="@Model.Doctor.Email" class="btn btn-primary">Consultar</a>
+                                    }
                                 </td>
                             </tr>
                         }
-
                     </tbody>
                 </table>
             }

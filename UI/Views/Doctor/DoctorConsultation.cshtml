@@ -6,9 +6,7 @@
 }
 
 <div class="container">
-
     <main>
-
         <partial name="_Header" />
 
         <h2>Consultation with (Dr.)@Model.Doctor.Name</h2>
@@ -23,31 +21,34 @@
             @Model.Appointments.Single(a => a.Id == Model.SelectedAppointmentId).FeesPaid €
         </p>
 
-
         <div class="form-group mb-3">
             <label><b>Mensagem do Paciente:</b></label>
             <textarea asp-for="@Model.Appointments.Single(a => a.Id == Model.SelectedAppointmentId).PatientMessage" class="form-control" readonly rows="4"></textarea>
         </div>
 
-
-
-
-        <p>Attachment do Paciente:<a href="@Url.Action("DownloadAttachment", "Doctor", new { appointmentId = Model.SelectedAppointmentId })">Download Attachment</a></p>
+        <p>Attachment do Paciente: <a href="@Url.Action("DownloadAttachment", "Doctor", new { appointmentId = Model.SelectedAppointmentId })">Download Attachment</a></p>
 
         <form asp-asp-controller="Doctor" asp-action="UpdateDoctorMessage" method="post" enctype="multipart/form-data">
             <input hidden name="appointmentId" value="@Model.SelectedAppointmentId" />
+            <input hidden name="Email" value="@Model.Doctor.Email" />
             <div class="form-group mb-3">
                 <p><b>Resposta do Médico:</b></p>
-                <textarea asp-for="@Model.Appointments.Single(a => a.Id == Model.SelectedAppointmentId).DoctorMessage" class="form-control" placeholder="Mensagem do Médico" rows="4"></textarea>
+                <textarea asp-for="Appointments.Single(a => a.Id == Model.SelectedAppointmentId).DoctorMessage" class="form-control" placeholder="Mensagem do Médico" rows="4" readonly="@(Model.Appointments.Single(a => a.Id == Model.SelectedAppointmentId).IsDone)"></textarea>
+
             </div>
-            <button type="submit" class="mt-3 btn btn-primary">Enviar Resposta</button>
+            <button type="submit" class="mt-3 btn btn-primary" @(Model.Appointments.Single(a => a.Id == Model.SelectedAppointmentId).IsDone ? "disabled" : "")>Enviar Resposta</button>
         </form>
+        <form asp-asp-controller="Doctor" asp-action="CloseAppointment" method="post" enctype="multipart/form-data">
+            <input hidden name="appointmentId" value="@Model.SelectedAppointmentId" />
+
+            @if (!Model.Appointments.Single(a => a.Id == Model.SelectedAppointmentId).IsDone)
+            {
+                <button type="submit" class="btn btn-danger">Fechar</button>
+            }
+        </form>
+
         <a asp-controller="Doctor" asp-action="DoctorDashboard" class="btn btn-secondary">Voltar</a>
-
-
-
     </main>
 
     <partial name="_Footer" />
-
 </div>

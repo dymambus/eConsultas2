@@ -44,8 +44,6 @@ namespace LibBiz.Data
             _context.Users.Remove(user);
             _context.SaveChanges();
         }
-
-
     }
 
     public interface IBusinessMethods
@@ -123,16 +121,6 @@ namespace LibBiz.Data
 
             return doctor;
         }
-        //public List<Appointment> GetAppointmentById(int appointmentId)
-        //{
-        //    var query = _context.Appointments
-        //        .Include(x => x.Doctor)
-        //        .Include(x => x.Patient)
-        //        .Where(x => x.Id == appointmentId);
-
-        //    return query.ToList();
-        //}
-
         public Appointment GetAppointmentById(int appointmentId)
         {
             var query = _context.Appointments
@@ -262,7 +250,6 @@ namespace LibBiz.Data
 
             return existingDoctor;
         }
-
         public Doctor UpdateDoctorClinic(int doctorId, string address, string region, string city)
         {
             var existingDoctor = _context.Doctors.Find(doctorId);
@@ -278,7 +265,6 @@ namespace LibBiz.Data
 
             return existingDoctor;
         }
-
         public Doctor UpdateDoctorFees(int doctorId, int fees, string PriceNotes)
         {
             var existingDoctor = _context.Doctors.Find(doctorId);
@@ -293,7 +279,6 @@ namespace LibBiz.Data
 
             return existingDoctor;
         }
-
         public Doctor UpdateDoctorPassword(int doctorId, string oldpassword, string newpassword)
         {
             var existingDoctor = _context.Doctors.Find(doctorId);
@@ -314,7 +299,6 @@ namespace LibBiz.Data
 
             return existingDoctor;
         }
-
         public Appointment UpdateAppointment(int appointmentId, string? doctorMessage)
         {
             var existingAppointment = _context.Appointments.Find(appointmentId);
