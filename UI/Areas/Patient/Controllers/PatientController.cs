@@ -87,36 +87,61 @@ namespace UI.Areas.Patient.Controllers
         }
 
         [HttpGet]
-        public IActionResult Search(PatientAreaModel? model = null)
+        public IActionResult Search()
         {
-            if (model.Doctors == null)
+            var token = HttpContext.Session.GetString("Token");
+            if (token == null)
             {
-                model = new PatientAreaModel()
-                {
-                    Patient = GetPatient(),
-                    Doctors = _BM.GetAllDoctors(),
-                    Specializations = _BM.GetAllSpecializations()
-                };
+                return RedirectToAction("Login", "Auth");
             }
+            else
+            {
+                // Consulte o banco de dados para obter a lista de médicos
+                var doctors = _BM.GetAllDoctors();
 
-            return View(model);
+                // Consulte o banco de dados para obter a lista de especializações
+                var specializations = _BM.GetAllSpecializations();
+
+                // Crie uma instância de PatientAreaModel e preencha as propriedades Doctors e Specializations
+                var model = new PatientAreaModel
+                {
+                    Doctors = doctors,
+                    Specializations = specializations
+                };
+
+                // Agora você tem a ViewModel composta pronta para exibição na página Search.cshtml
+                return View(model);
+            }
         }
 
         [HttpPost]
         public IActionResult SearchDoctors(PatientAreaModel model)
         {
-            if (model == null)
+            if (ModelState.IsValid)
             {
-                model = new PatientAreaModel()
+                // Verifique o valor selecionado em SelectSpecialization e filtre a lista de médicos conforme necessário
+                if (!string.IsNullOrEmpty(model.SelectSpecialization))
                 {
-                    Doctors = _BM.GetAllDoctors(),
-                    Patient = GetPatient()
-                };
+                    var filteredDoctors = _BM.GetDoctorsBySpecialization(model.SelectSpecialization);
+                    model.Doctors = filteredDoctors;
+                }
+
+                // Consulte o banco de dados para obter a lista completa de especializações
+                var specializations = _BM.GetAllSpecializations();
+                model.Specializations = specializations;
+
+                // Agora você tem o modelo preenchido com os médicos filtrados (se houver) e a lista completa de especializações
+                return View("Search", model);
             }
-
-            // Now, you can use the 'model' object as needed.
-
-            return RedirectToAction("Search");
+            else
+            {
+                // Se o modelo não for válido, retorne à página de pesquisa
+                return View("Search", model);
+            }
         }
+
+
+
+
     }
 }

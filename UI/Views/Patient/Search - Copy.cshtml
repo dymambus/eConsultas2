@@ -33,7 +33,6 @@
                             <th scope="col">Phone</th>
                             <th scope="col">Fees</th>
                             <th scope="col">Clinic</th>
-                            <th scopw="col">Consultation</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,7 +44,6 @@
                                 <td>@doctor.Phone</td>
                                 <td>Rs. @doctor.Price (<small class="text-muted">@doctor.PriceDescription</small>)</td>
                                 <td>@doctor.Address</td>
-                                <td><a asp-page-handler="MakePay" asp-route-doctorID="@doctor.UserId" class="mt-3 btn btn-primary">Pay Fees and Consult</a></td>
                             </tr>
                         }
                     </tbody>
