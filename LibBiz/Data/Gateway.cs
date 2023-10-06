@@ -58,7 +58,7 @@ namespace LibBiz.Data
         public Appointment CreateAppointment(int doctorId, int patientId, string patientMessage = null);
         public Doctor GetDoctorByEmail(string email);
         public List<Appointment> GetAppointmentsByPatientId(int userId);
-        public List<Appointment> GetAppointmentById(int appointmentId);
+        //public List<Appointment> GetAppointmentById(int appointmentId);
         public List<Appointment> GetAppointmentsByDoctorId(int userId);
         public Doctor UpdateDoctorPhoto(Doctor doctor);
         public Doctor UpdateDoctor(Doctor updatedDoctor);
@@ -67,6 +67,8 @@ namespace LibBiz.Data
         public Doctor UpdateDoctorFees(int doctorId, int fees);
         public Doctor UpdateDoctorPassword(int doctorId, string oldpassword, string newpassword);
         public Patient? GetPatientByEmail(string? email);
+        public Appointment UpdateAppointment(int appointmentId, string? doctorMessage = null);
+        public Appointment GetAppointmentById(int appointmentId);
 
     }
 
@@ -121,14 +123,24 @@ namespace LibBiz.Data
 
             return doctor;
         }
-        public List<Appointment> GetAppointmentById(int appointmentId)
+        //public List<Appointment> GetAppointmentById(int appointmentId)
+        //{
+        //    var query = _context.Appointments
+        //        .Include(x => x.Doctor)
+        //        .Include(x => x.Patient)
+        //        .Where(x => x.Id == appointmentId);
+
+        //    return query.ToList();
+        //}
+
+        public Appointment GetAppointmentById(int appointmentId)
         {
             var query = _context.Appointments
                 .Include(x => x.Doctor)
                 .Include(x => x.Patient)
-                .Where(x => x.Id == appointmentId);
+                .FirstOrDefault(x => x.Id == appointmentId);
 
-            return query.ToList();
+            return query;
         }
         public Patient? GetPatientByEmail(string? email)
         {
@@ -299,6 +311,22 @@ namespace LibBiz.Data
             _context.SaveChanges();
 
             return existingDoctor;
+        }
+
+        public Appointment UpdateAppointment(int appointmentId, string? doctorMessage)
+        {
+            var existingAppointment = _context.Appointments.Find(appointmentId);
+            if (existingAppointment == null)
+            {
+                throw new Exception("Consulta não encontrada");
+            }
+
+            existingAppointment.DoctorMessage = doctorMessage;
+
+
+            _context.SaveChanges();
+
+            return existingAppointment;
         }
     }
 }

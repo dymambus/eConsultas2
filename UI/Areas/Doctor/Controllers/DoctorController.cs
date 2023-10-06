@@ -383,5 +383,26 @@ namespace UI.Areas.Doctor.Controllers
             return RedirectToAction("DoctorProfile");
 
         }
+
+        [HttpPost]
+        public IActionResult UpdateDoctorMessage(int appointmentId, string doctorMessage)
+        {
+            // Consulte o banco de dados para obter a consulta com base no ID
+            var appointment = _BM.GetAppointmentById(appointmentId);
+
+            if (appointment == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            // Salve as alterações no banco de dados
+            _BM.UpdateAppointment(appointment.Id, doctorMessage);
+
+            // Redirecione de volta à página de detalhes da consulta
+            return RedirectToAction("DoctorConsultation", new { appointmentId = appointmentId, userEmail = appointment.Doctor.Email });
+        }
+
+
+
     }
 }
