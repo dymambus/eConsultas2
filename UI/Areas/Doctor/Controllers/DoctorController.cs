@@ -295,8 +295,6 @@ namespace UI.Areas.Doctor.Controllers
             return dashboardViewModel;
         }
 
-
-
         [HttpGet]
         public IActionResult GetAllSpecialization()
         {
@@ -353,9 +351,9 @@ namespace UI.Areas.Doctor.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateDoctorSpecialization(int doctorId, string specializationName)
+        public IActionResult UpdateDoctorSpecialization(int doctorId, string specializationName, string SpecializationDescription)
         {
-            var doctor = _BM.UpdateDoctorSpecialization(doctorId, specializationName);
+            var doctor = _BM.UpdateDoctorSpecialization(doctorId, specializationName, SpecializationDescription);
             return RedirectToAction("DoctorSpecialization");
 
         }
@@ -369,9 +367,9 @@ namespace UI.Areas.Doctor.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateDoctorFees(int doctorId, int price)
+        public IActionResult UpdateDoctorFees(int doctorId, int price, string PriceNotes)
         {
-            var doctor = _BM.UpdateDoctorFees(doctorId, price);
+            var doctor = _BM.UpdateDoctorFees(doctorId, price, PriceNotes);
             return RedirectToAction("DoctorFees");
 
         }
@@ -401,8 +399,6 @@ namespace UI.Areas.Doctor.Controllers
             // Redirecione de volta à página de detalhes da consulta
             return RedirectToAction("DoctorConsultation", new { appointmentId = appointmentId, userEmail = appointment.Doctor.Email });
         }
-
-
 
     }
 }

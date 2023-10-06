@@ -62,9 +62,9 @@ namespace LibBiz.Data
         public List<Appointment> GetAppointmentsByDoctorId(int userId);
         public Doctor UpdateDoctorPhoto(Doctor doctor);
         public Doctor UpdateDoctor(Doctor updatedDoctor);
-        public Doctor UpdateDoctorSpecialization(int doctorId, string specialization);
+        public Doctor UpdateDoctorSpecialization(int doctorId, string specialization, string? message);
         public Doctor UpdateDoctorClinic(int doctorId, string address, string region, string city);
-        public Doctor UpdateDoctorFees(int doctorId, int fees);
+        public Doctor UpdateDoctorFees(int doctorId, int fees, string PriceNotes);
         public Doctor UpdateDoctorPassword(int doctorId, string oldpassword, string newpassword);
         public Patient? GetPatientByEmail(string? email);
         public Appointment UpdateAppointment(int appointmentId, string? doctorMessage = null);
@@ -218,7 +218,7 @@ namespace LibBiz.Data
 
             return updatedPatient;
         }
-        public Appointment CreateAppointment(int doctorId, int patientId, string? patientMessage = null)
+        public Appointment CreateAppointment(int doctorId, int patientId, string? patientMessage)
         {
             var doctor = _context.Doctors.Find(doctorId);
             var patient = _context.Patients.Find(patientId);
@@ -248,7 +248,7 @@ namespace LibBiz.Data
 
             return appointment;
         }
-        public Doctor UpdateDoctorSpecialization(int doctorId, string specialization)
+        public Doctor UpdateDoctorSpecialization(int doctorId, string specialization, string? s)
         {
             var existingDoctor = _context.Doctors.Find(doctorId);
             if (existingDoctor == null)
@@ -256,6 +256,7 @@ namespace LibBiz.Data
                 throw new Exception("Médico não encontrado");
             }
             existingDoctor.SpecializationName = specialization;
+            existingDoctor.SpecializationDescription = s;
 
             _context.SaveChanges();
 
@@ -278,7 +279,7 @@ namespace LibBiz.Data
             return existingDoctor;
         }
 
-        public Doctor UpdateDoctorFees(int doctorId, int fees)
+        public Doctor UpdateDoctorFees(int doctorId, int fees, string PriceNotes)
         {
             var existingDoctor = _context.Doctors.Find(doctorId);
             if (existingDoctor == null)
@@ -286,6 +287,7 @@ namespace LibBiz.Data
                 throw new Exception("Médico não encontrado");
             }
             existingDoctor.Price = fees;
+            existingDoctor.PriceDescription = PriceNotes;
 
             _context.SaveChanges();
 
