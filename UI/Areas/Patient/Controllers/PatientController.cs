@@ -93,7 +93,9 @@ namespace UI.Areas.Patient.Controllers
             {
                 model = new PatientAreaModel()
                 {
-                    Patient = GetPatient()
+                    Patient = GetPatient(),
+                    Doctors = _BM.GetAllDoctors(),
+                    Specializations = _BM.GetAllSpecializations()
                 };
             }
 
@@ -101,15 +103,20 @@ namespace UI.Areas.Patient.Controllers
         }
 
         [HttpPost]
-        public IActionResult Search()
+        public IActionResult SearchDoctors(PatientAreaModel model)
         {
-            PatientAreaModel searchModel = new()
+            if (model == null)
             {
-                Doctors = _BM.GetAllDoctors(),
-                Patient = GetPatient()
-            };
+                model = new PatientAreaModel()
+                {
+                    Doctors = _BM.GetAllDoctors(),
+                    Patient = GetPatient()
+                };
+            }
 
-            return View(searchModel);
+            // Now, you can use the 'model' object as needed.
+
+            return RedirectToAction("Search");
         }
     }
 }

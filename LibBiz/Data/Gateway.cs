@@ -70,6 +70,8 @@ namespace LibBiz.Data
 
         // Patient CRUD
         public Patient? P_Update(Patient patient);
+
+        public List<Doctor> GetDoctorsBySpecialization(string spName);
     }
 
     public class BusinessMethodsImpl : IBusinessMethods
@@ -101,6 +103,15 @@ namespace LibBiz.Data
             return newPatient;
         }
 
+        public List<Doctor> GetDoctorsBySpecialization(string spName)
+        {
+            var allDoctors = GetAllDoctors();
+
+            var filteredDoctors = allDoctors.FindAll(doctor => doctor.SpecializationName == spName);
+
+            return filteredDoctors;
+        }
+
         public List<Appointment> GetAppointmentsByDoctorId(int userId)
         {
             var query = _context.Appointments
@@ -119,9 +130,9 @@ namespace LibBiz.Data
 
             return query.ToList();
         }
-        public List<string> GetAllSpecializations()
+        public List<string>? GetAllSpecializations()
         {
-            List<string> specializations = _context.Doctors
+            List<string>? specializations = _context.Doctors
                 .Select(doctor => doctor.SpecializationName)
                 .Distinct()
                 .ToList();
