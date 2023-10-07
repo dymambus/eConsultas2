@@ -34,7 +34,16 @@
                         @foreach (var appointmentViewModel in Model.Appointments)
                         {
                             <tr>
-                                <td>@appointmentViewModel.IsDone</td>
+                                <td>
+                                    @if (appointmentViewModel.IsDone)
+                                    {
+                                        <span class="badge badge-warning">&#10004;</span>
+                                    }
+                                    else
+                                    {
+                                        <p>Em Aberto</p>
+                                    }
+                                </td>
                                 <td>@appointmentViewModel.Date</td>
                                 <td>@appointmentViewModel.PatientPhone</td>
                                 <td>@appointmentViewModel.PatientName</td>

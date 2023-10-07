@@ -26,8 +26,21 @@
             <textarea asp-for="@Model.Appointments.Single(a => a.Id == Model.SelectedAppointmentId).PatientMessage" class="form-control" readonly rows="4"></textarea>
         </div>
 
-        <p>Attachment do Paciente: <a href="@Url.Action("DownloadAttachment", "Doctor", new { appointmentId = Model.SelectedAppointmentId })">Download Attachment</a></p>
 
+        @if (!Model.Appointments.Single(a => a.Id == Model.SelectedAppointmentId).IsDone)
+        {
+            @if (Model.AttachmentData != null)
+            {
+                <div class="mt-3">
+                    <p><b>Attachment:</b></p>
+                    <a asp-controller="Patient" asp-action="DownloadAttachment" asp-route-appointmentId="@Model.SelectedAppointmentId" class="btn btn-primary">Download Attachment</a>
+                </div>
+            }
+            else
+            {
+                <p><b>Attachment:</b> Nenhum</p>
+            }
+        }
         <form asp-asp-controller="Doctor" asp-action="UpdateDoctorMessage" method="post" enctype="multipart/form-data">
             <input hidden name="appointmentId" value="@Model.SelectedAppointmentId" />
             <input hidden name="Email" value="@Model.Doctor.Email" />

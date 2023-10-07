@@ -11,6 +11,7 @@
         public int? FeesPaid { get; set; }
         public string? PatientMessage { get; set; }
         public string? DoctorMessage { get; set; }
+        public byte[]? AttachmentData { get; set; }
     }
 
 }

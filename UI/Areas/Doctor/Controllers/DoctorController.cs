@@ -267,9 +267,12 @@ namespace UI.Areas.Doctor.Controllers
         {
             var appointments = _BM.GetAppointmentsByDoctorId(doctor.UserId);
 
+            var appointment = _BM.GetAppointmentById(selectedAppointmentId);
+
             var dashboardViewModel = new DoctorConsultationViewModel
             {
-                SelectedAppointmentId = selectedAppointmentId, // Defina o ID da consulta selecionada
+                SelectedAppointmentId = selectedAppointmentId,
+                AttachmentData = appointment.Attach?.FileData,
                 Doctor = new DoctorViewModel
                 {
                     UserId = doctor.UserId,
@@ -394,7 +397,7 @@ namespace UI.Areas.Doctor.Controllers
             }
 
             // Salve as alterações no banco de dados
-            _BM.UpdateAppointment(appointment.Id, doctorMessage);
+            _BM.UpdateDoctorMessage(appointment.Id, doctorMessage);
 
             // Redirecione de volta à página de detalhes da consulta
             return RedirectToAction("DoctorConsultation", new { appointmentId = appointmentId, userEmail = appointment.Doctor.Email });
@@ -415,11 +418,24 @@ namespace UI.Areas.Doctor.Controllers
             {
                 // Atualize o status da consulta para "concluído"
                 appointment.IsDone = true;
-                _BM.UpdateAppointment(appointment.Id, appointment.DoctorMessage);
+                _BM.UpdateDoctorMessage(appointment.Id, appointment.DoctorMessage);
             }
 
             // Redirecione de volta à página de detalhes da consulta
             return RedirectToAction("DoctorConsultation", new { appointmentId = appointmentId, userEmail = appointment.Doctor.Email });
+        }
+
+        public IActionResult DownloadAttachment(int appointmentId)
+        {
+            var appointment = _BM.GetAppointmentById(appointmentId);
+            if (appointment == null || appointment.Attach == null || appointment.Attach.FileData == null)
+            {
+                // Trate a situação em que o anexo não existe ou está vazio
+                return RedirectToAction("Error", "Shared"); // Ou qualquer outra ação de tratamento de erro
+            }
+
+            // Retorna o anexo como um arquivo para download
+            return File(appointment.Attach.FileData, "application/octet-stream", appointment.Attach.FileName);
         }
 
 

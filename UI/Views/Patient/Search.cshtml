@@ -45,7 +45,15 @@
                                 <td>@doctor.Phone</td>
                                 <td>Rs. @doctor.Price (<small class="text-muted">@doctor.PriceDescription</small>)</td>
                                 <td>@doctor.Address</td>
-                                <td><a asp-page-handler="MakePay" asp-route-doctorID="@doctor.UserId" class="mt-3 btn btn-primary">Pay Fees and Consult</a></td>
+                                <td>
+                                    <form asp-asp-controller="Patient" asp-action="MakePay" method="post" enctype="multipart/form-data">
+                                        <input hidden name="doctorId" value="@doctor.UserId" />
+
+
+                                        <button type="submit" class="btn btn-danger">Pay Fees and Consult</button>
+
+                                    </form>
+                                </td>
                             </tr>
                         }
                     </tbody>

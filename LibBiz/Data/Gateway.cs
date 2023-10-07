@@ -56,7 +56,6 @@ namespace LibBiz.Data
         public Appointment CreateAppointment(int doctorId, int patientId, string patientMessage = null);
         public Doctor GetDoctorByEmail(string email);
         public List<Appointment> GetAppointmentsByPatientId(int userId);
-        //public List<Appointment> GetAppointmentById(int appointmentId);
         public List<Appointment> GetAppointmentsByDoctorId(int userId);
         public Doctor UpdateDoctorPhoto(Doctor doctor);
         public Doctor UpdateDoctor(Doctor updatedDoctor);
@@ -65,8 +64,10 @@ namespace LibBiz.Data
         public Doctor UpdateDoctorFees(int doctorId, int fees, string PriceNotes);
         public Doctor UpdateDoctorPassword(int doctorId, string oldpassword, string newpassword);
         public Patient? GetPatientByEmail(string? email);
-        public Appointment UpdateAppointment(int appointmentId, string? doctorMessage = null);
+        public Appointment UpdateDoctorMessage(int appointmentId, string? doctorMessage);
+        public Appointment UpdatePatientMessage(int appointmentId, string? patientMessage);
         public Appointment GetAppointmentById(int appointmentId);
+        public Task<int> SaveAttachment(Attach attach);
 
         // Patient CRUD
         public Patient? P_Update(Patient patient);
@@ -81,8 +82,6 @@ namespace LibBiz.Data
         {
             _context = context;
         }
-
-        // Patient CRUD
         public Patient? P_Update(Patient newPatient)
         {
             var oldPatient = _context.Patients.Find(newPatient.UserId);
@@ -102,7 +101,6 @@ namespace LibBiz.Data
 
             return newPatient;
         }
-
         public List<Doctor> GetDoctorsBySpecialization(string spName)
         {
             var allDoctors = GetAllDoctors();
@@ -111,7 +109,6 @@ namespace LibBiz.Data
 
             return filteredDoctors;
         }
-
         public List<Appointment> GetAppointmentsByDoctorId(int userId)
         {
             var query = _context.Appointments
@@ -125,6 +122,7 @@ namespace LibBiz.Data
         {
             var query = _context.Appointments
                 .Include(x => x.Doctor)
+                .Include(x => x.Attach)
                 .Include(x => x.Patient)
                 .Where(x => x.Patient.UserId == userId);
 
@@ -160,6 +158,7 @@ namespace LibBiz.Data
         {
             var query = _context.Appointments
                 .Include(x => x.Doctor)
+                .Include(x => x.Attach)
                 .Include(x => x.Patient)
                 .FirstOrDefault(x => x.Id == appointmentId);
 
@@ -334,7 +333,7 @@ namespace LibBiz.Data
 
             return existingDoctor;
         }
-        public Appointment UpdateAppointment(int appointmentId, string? doctorMessage)
+        public Appointment UpdateDoctorMessage(int appointmentId, string? doctorMessage)
         {
             var existingAppointment = _context.Appointments.Find(appointmentId);
             if (existingAppointment == null)
@@ -345,9 +344,28 @@ namespace LibBiz.Data
             existingAppointment.DoctorMessage = doctorMessage;
 
 
+
             _context.SaveChanges();
 
             return existingAppointment;
+        }
+        public Appointment UpdatePatientMessage(int appointmentId, string? patientMessage)
+        {
+            var existingAppointment = _context.Appointments.Find(appointmentId);
+            if (existingAppointment == null)
+            {
+                throw new Exception("Consulta não encontrada");
+            }
+
+            existingAppointment.PatientMessage = patientMessage;
+            _context.SaveChanges();
+            return existingAppointment;
+        }
+        public async Task<int> SaveAttachment(Attach attach)
+        {
+            _context.Attachments.Add(attach);
+            await _context.SaveChangesAsync();
+            return attach.AttachId;
         }
     }
 }

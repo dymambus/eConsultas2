@@ -3,6 +3,7 @@ using LibBiz.Data;
 using LibBiz.Models;
 using Newtonsoft.Json;
 using UI.Models;
+using System.Numerics;
 
 namespace UI.Areas.Patient.Controllers
 {
@@ -52,13 +53,59 @@ namespace UI.Areas.Patient.Controllers
         public IActionResult Index()
         {
             _logger.LogCritical("Chegou ao Index do paciente!"); // Demonstração do Logger
-
-            PatientAreaModel patient = new()
+            var token = HttpContext.Session.GetString("Token");
+            if (token == null)
             {
-                Patient = GetPatient()
-            };
+                return RedirectToAction("Login", "Auth");
+            }
+            else
+            {
+                var userEmail = HttpContext.Session.GetString("Email");
 
-            return View(patient);
+                // Consulte o banco de dados para obter as consultas do médico com base no email
+                var patient = _BM.GetPatientByEmail(userEmail);
+
+                if (patient != null)
+                {
+                    // Consulta as consultas do médico
+                    var appointments = _BM.GetAppointmentsByPatientId(patient.UserId);
+
+                    // Crie uma instância de DoctorDashboardViewModel e preencha as propriedades Doctor e Appointments
+                    var IndexViewModel = new PatientConsultationViewModel
+                    {
+                        Patient = new PatientInfoViewModel
+                        {
+                            // Preencha as propriedades do médico a partir do objeto 'doctor'
+                            UserId = patient.UserId,
+                            Email = patient.Email,
+                            Name = patient.Name,
+                            // Outras propriedades do médico
+                        },
+                        Appointments = appointments.Select(appointment => new AppointmentViewModel
+                        {
+                            // Preencha as propriedades das consultas a partir dos objetos 'appointments'
+                            Id = appointment.Id,
+                            Date = appointment.Date,
+                            IsDone = appointment.IsDone,
+                            PatientName = appointment.Patient.Name,
+                            DoctorName = appointment.Doctor.Name,
+                            PatientPhone = appointment.Patient.Phone,
+                            FeesPaid = appointment.Price,
+                            PatientMessage = appointment.PatientMessage,
+                            DoctorMessage = appointment.DoctorMessage
+
+                            // Outras propriedades das consultas
+                        }).ToList()
+                    };
+
+                    // Agora você tem a ViewModel composta pronta para exibição na página
+                    return View(IndexViewModel);
+                }
+                else
+                {
+                    return RedirectToAction("Error", "Home");
+                }
+            }
         }
 
         [HttpGet]
@@ -117,30 +164,161 @@ namespace UI.Areas.Patient.Controllers
         [HttpPost]
         public IActionResult SearchDoctors(PatientAreaModel model)
         {
+            // Consulte o banco de dados para obter a lista completa de especializações
+            var specializations = _BM.GetAllSpecializations();
+            model.Specializations = specializations;
+
+            // Verifique o valor selecionado em SelectSpecialization e filtre a lista de médicos conforme necessário
+            if (string.IsNullOrEmpty(model.SelectSpecialization) || model.SelectSpecialization == "Show All")
+            {
+                // Carregar a lista completa de médicos sem aplicar filtros
+                var doctors = _BM.GetAllDoctors();
+                model.Doctors = doctors;
+            }
+            else
+            {
+                // Filtrar a lista de médicos com base na especialização selecionada
+                var filteredDoctors = _BM.GetDoctorsBySpecialization(model.SelectSpecialization);
+                model.Doctors = filteredDoctors;
+            }
+
             if (ModelState.IsValid)
             {
-                // Verifique o valor selecionado em SelectSpecialization e filtre a lista de médicos conforme necessário
-                if (!string.IsNullOrEmpty(model.SelectSpecialization))
-                {
-                    var filteredDoctors = _BM.GetDoctorsBySpecialization(model.SelectSpecialization);
-                    model.Doctors = filteredDoctors;
-                }
-
-                // Consulte o banco de dados para obter a lista completa de especializações
-                var specializations = _BM.GetAllSpecializations();
-                model.Specializations = specializations;
-
-                // Agora você tem o modelo preenchido com os médicos filtrados (se houver) e a lista completa de especializações
                 return View("Search", model);
             }
             else
             {
-                // Se o modelo não for válido, retorne à página de pesquisa
                 return View("Search", model);
             }
         }
 
+        [HttpPost]
+        public IActionResult MakePay(int doctorId)
+        {
+            var patient = GetPatient();
 
+            // Salve a consulta no banco de dados
+            var appointment = _BM.CreateAppointment(doctorId, patient.UserId); // Supondo que você tenha um método para criar consultas
+
+
+            // Redirecione para a página de confirmação ou para a página de detalhes da consulta do paciente
+            return RedirectToAction("PatientConsultation", new { appointmentId = appointment.Id, userEmail = patient.Email });
+        }
+
+        [HttpGet]
+        public IActionResult PatientConsultation(int appointmentId, string userEmail)
+        {
+            var token = HttpContext.Session.GetString("Token");
+            if (token == null)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
+            else
+            {
+                var patient = _BM.GetPatientByEmail(userEmail);
+                var appointment = _BM.GetAppointmentById(appointmentId);
+
+                if (patient == null || appointment == null)
+                {
+                    return RedirectToAction("Error", "Shared");
+                }
+                var ViewModel = CreatePacientConsultationViewModel(patient, appointmentId);
+
+                return View(ViewModel);
+            }
+        }
+
+        public PatientConsultationViewModel CreatePacientConsultationViewModel(LibBiz.Models.Patient patient, int appointmentId)
+        {
+            var appointments = _BM.GetAppointmentsByPatientId(patient.UserId);
+
+            var appointment = _BM.GetAppointmentById(appointmentId);
+
+            var ViewModel = new PatientConsultationViewModel
+            {
+                SelectedAppointmentId = appointmentId,
+                AttachmentData = appointment.Attach?.FileData,
+                Patient= new PatientInfoViewModel
+                {
+                    Name = patient.Name,
+                    Email = patient.Email,
+                    Phone = patient.Phone
+                },
+                Appointments = appointments.Select(appointment => new AppointmentViewModel
+                {
+                    Id = appointment.Id,
+                    Date = appointment.Date,
+                    IsDone = appointment.IsDone,
+                    PatientName = appointment.Patient.Name,
+                    DoctorName = appointment.Doctor.Name,
+                    PatientPhone = appointment.Patient.Phone,
+                    FeesPaid = appointment.Price,
+                    PatientMessage = appointment.PatientMessage,
+                    DoctorMessage = appointment.DoctorMessage
+                }).ToList()
+            };
+            return ViewModel;
+        }
+
+        [HttpPost]
+        public IActionResult UpdatePatientMessage(int appointmentId, string patientMessage)
+        {
+            var appointment = _BM.GetAppointmentById(appointmentId);
+
+            if (appointment == null)
+            {
+                return RedirectToAction("Error", "Shared");
+            }
+
+            _BM.UpdatePatientMessage(appointment.Id, patientMessage);
+
+            return RedirectToAction("PatientConsultation", new { appointmentId = appointmentId, userEmail = appointment.Patient.Email });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UploadFile(int SelectedAppointmentId, IFormFile file)
+        {
+            var appointment = _BM.GetAppointmentById(SelectedAppointmentId);
+            if (appointment == null)
+            {
+                return RedirectToAction("Error", "Shared");
+            }
+            else
+            {
+                if (appointment.Attach == null)
+                {
+                    appointment.Attach = new Attach(); // Inicialize Attach se for null
+                }
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    await file.CopyToAsync(memoryStream);
+                    appointment.Attach.FileName = file.FileName; // Defina o nome do arquivo
+                    appointment.Attach.FileData = memoryStream.ToArray();
+                }
+
+                // Salve o anexo no banco de dados
+                await _BM.SaveAttachment(appointment.Attach);
+            }
+
+            // Corrija a maneira como você passa o valor do email do paciente (caso contrário, pode estar vazio)
+            var userEmail = appointment.Patient?.Email ?? "";
+
+            return RedirectToAction("PatientConsultation", new { appointmentId = SelectedAppointmentId, userEmail });
+        }
+
+        public IActionResult DownloadAttachment(int appointmentId)
+        {
+            var appointment = _BM.GetAppointmentById(appointmentId);
+            if (appointment == null || appointment.Attach == null || appointment.Attach.FileData == null)
+            {
+                // Trate a situação em que o anexo não existe ou está vazio
+                return RedirectToAction("Error", "Shared"); // Ou qualquer outra ação de tratamento de erro
+            }
+
+            // Retorna o anexo como um arquivo para download
+            return File(appointment.Attach.FileData, "application/octet-stream", appointment.Attach.FileName);
+        }
 
 
     }
