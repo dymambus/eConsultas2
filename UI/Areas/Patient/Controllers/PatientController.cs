@@ -4,6 +4,7 @@ using LibBiz.Models;
 using Newtonsoft.Json;
 using UI.Models;
 using System.Numerics;
+using Microsoft.AspNetCore.Authorization;
 
 namespace UI.Areas.Patient.Controllers
 {
@@ -54,6 +55,11 @@ namespace UI.Areas.Patient.Controllers
         {
             _logger.LogCritical("Chegou ao Index do paciente!"); // Demonstração do Logger
             var token = HttpContext.Session.GetString("Token");
+            var userRole = HttpContext.Session.GetInt32("UserRole");
+            if (userRole == 1)
+            {
+                return RedirectToAction("Error", "LandingPage");
+            }
             if (token == null)
             {
                 return RedirectToAction("Login", "Auth");
@@ -111,6 +117,11 @@ namespace UI.Areas.Patient.Controllers
         [HttpGet]
         public IActionResult Profile()
         {
+            var userRole = HttpContext.Session.GetInt32("UserRole");
+            if (userRole == 1)
+            {
+                return RedirectToAction("Error", "LandingPage");
+            }
             P_ProfileModel currPatient = new()
             {
                 Patient = GetPatient()
@@ -137,6 +148,11 @@ namespace UI.Areas.Patient.Controllers
         public IActionResult Search()
         {
             var token = HttpContext.Session.GetString("Token");
+            var userRole = HttpContext.Session.GetInt32("UserRole");
+            if (userRole == 1)
+            {
+                return RedirectToAction("Error", "LandingPage");
+            }
             if (token == null)
             {
                 return RedirectToAction("Login", "Auth");
@@ -209,6 +225,11 @@ namespace UI.Areas.Patient.Controllers
         public IActionResult PatientConsultation(int appointmentId, string userEmail)
         {
             var token = HttpContext.Session.GetString("Token");
+            var userRole = HttpContext.Session.GetInt32("UserRole");
+            if (userRole == 1)
+            {
+                return RedirectToAction("Error", "LandingPage");
+            }
             if (token == null)
             {
                 return RedirectToAction("Login", "Auth");
@@ -227,7 +248,6 @@ namespace UI.Areas.Patient.Controllers
                 return View(ViewModel);
             }
         }
-
         public PatientConsultationViewModel CreatePacientConsultationViewModel(LibBiz.Models.Patient patient, int appointmentId)
         {
             var appointments = _BM.GetAppointmentsByPatientId(patient.UserId);

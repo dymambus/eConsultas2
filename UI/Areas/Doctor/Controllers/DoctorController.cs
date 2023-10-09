@@ -33,6 +33,11 @@ namespace UI.Areas.Doctor.Controllers
         public IActionResult DoctorDashboard()
         {
             var token = HttpContext.Session.GetString("Token");
+            var userRole = HttpContext.Session.GetInt32("UserRole");
+            if (userRole == 0)
+            {
+                return RedirectToAction("Error", "LandingPage");
+            }
             if (token == null)
             {
                 return RedirectToAction("Login", "Auth");
@@ -91,6 +96,11 @@ namespace UI.Areas.Doctor.Controllers
         public IActionResult DoctorProfile()
         {
             var token = HttpContext.Session.GetString("Token");
+            var userRole = HttpContext.Session.GetInt32("UserRole");
+            if (userRole == 0)
+            {
+                return RedirectToAction("Error", "LandingPage");
+            }
             if (token == null)
             {
                 return RedirectToAction("Login", "Auth");
@@ -139,6 +149,11 @@ namespace UI.Areas.Doctor.Controllers
         public IActionResult DoctorSpecialization()
         {
             var token = HttpContext.Session.GetString("Token");
+            var userRole = HttpContext.Session.GetInt32("UserRole");
+            if (userRole == 0)
+            {
+                return RedirectToAction("Error", "LandingPage");
+            }
             if (token == null)
             {
                 return RedirectToAction("Login", "Auth");
@@ -175,6 +190,11 @@ namespace UI.Areas.Doctor.Controllers
         public IActionResult DoctorClinic()
         {
             var token = HttpContext.Session.GetString("Token");
+            var userRole = HttpContext.Session.GetInt32("UserRole");
+            if (userRole == 0)
+            {
+                return RedirectToAction("Error", "LandingPage");
+            }
             if (token == null)
             {
                 return RedirectToAction("Login", "Auth");
@@ -211,6 +231,11 @@ namespace UI.Areas.Doctor.Controllers
         public IActionResult DoctorFees()
         {
             var token = HttpContext.Session.GetString("Token");
+            var userRole = HttpContext.Session.GetInt32("UserRole");
+            if (userRole == 0)
+            {
+                return RedirectToAction("Error", "LandingPage");
+            }
             if (token == null)
             {
                 return RedirectToAction("Login", "Auth");
@@ -245,6 +270,11 @@ namespace UI.Areas.Doctor.Controllers
         public IActionResult DoctorConsultation(int appointmentId, string userEmail)
         {
             var token = HttpContext.Session.GetString("Token");
+            var userRole = HttpContext.Session.GetInt32("UserRole");
+            if (userRole == 0)
+            {
+                return RedirectToAction("Error", "LandingPage");
+            }
             if (token == null)
             {
                 return RedirectToAction("Login", "Auth");

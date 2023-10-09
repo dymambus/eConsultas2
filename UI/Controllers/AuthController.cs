@@ -44,6 +44,7 @@ namespace UI.Controllers
                 {
                     HttpContext.Session.SetString("Token", token);
                     HttpContext.Session.SetString("Email", email);
+                    HttpContext.Session.SetInt32("UserRole", user.RoleId);
 
                     return RedirectToAction("Index", "Patient");
                 }
@@ -51,6 +52,7 @@ namespace UI.Controllers
                 {
                     HttpContext.Session.SetString("Token", token);
                     HttpContext.Session.SetString("Email", email);
+                    HttpContext.Session.SetInt32("UserRole", user.RoleId);
 
                     return RedirectToAction("DoctorDashboard", "Doctor");
                 }
@@ -88,10 +90,9 @@ namespace UI.Controllers
 
         public IActionResult LogOut()
         {
-
             HttpContext.Session.Remove("Token");
             HttpContext.Session.Remove("Email");
-
+            HttpContext.Session.Remove("UserRole");
 
             return RedirectToAction("Login", "Auth");
         }
