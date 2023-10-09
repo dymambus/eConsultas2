@@ -5,6 +5,12 @@
     <link href="~/doctor/dashboard.css" rel="stylesheet" />
 }
 
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/eConsultasMVC.styles.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/starter-template.css" asp-append-version="true" />
+
+
 <partial name="_HeaderPatient" />
 
 <div class="container-fluid">
@@ -35,7 +41,7 @@
                                 <td>
                                     @if (appointmentViewModel.IsDone)
                                     {
-                                        <span class ="badge badge-warning">&#10004;</span>
+                                        <span class="badge badge-warning">&#10004;</span>
                                     }
                                     else
                                     {
