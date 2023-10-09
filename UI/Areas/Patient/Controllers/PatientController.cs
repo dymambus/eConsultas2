@@ -319,7 +319,5 @@ namespace UI.Areas.Patient.Controllers
             // Retorna o anexo como um arquivo para download
             return File(appointment.Attach.FileData, "application/octet-stream", appointment.Attach.FileName);
         }
-
-
     }
 }
