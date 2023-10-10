@@ -49,30 +49,33 @@ namespace LibBiz.Data
     public interface IBusinessMethods
     {
         public List<string> GetAllSpecializations();
-        public Doctor UpdateDoctorInfo(int doctorId, string name, string phone);
-        public List<Doctor> GetAllDoctors();
-        public Doctor GetDoctorById(int id);
-        public Patient UpdatePatient(Patient updatedPatient);
-        public Appointment CreateAppointment(int doctorId, int patientId, string patientMessage = null);
-        public Doctor GetDoctorByEmail(string email);
-        public List<Appointment> GetAppointmentsByPatientId(int userId);
-        public List<Appointment> GetAppointmentsByDoctorId(int userId);
-        public Doctor UpdateDoctorPhoto(Doctor doctor);
-        public Doctor UpdateDoctor(Doctor updatedDoctor);
-        public Doctor UpdateDoctorSpecialization(int doctorId, string specialization, string? message);
-        public Doctor UpdateDoctorClinic(int doctorId, string address, string region, string city);
-        public Doctor UpdateDoctorFees(int doctorId, int fees, string PriceNotes);
-        public Doctor UpdateDoctorPassword(int doctorId, string oldpassword, string newpassword);
-        public Patient? GetPatientByEmail(string? email);
-        public Appointment UpdateDoctorMessage(int appointmentId, string? doctorMessage);
-        public Appointment UpdatePatientMessage(int appointmentId, string? patientMessage);
-        public Appointment GetAppointmentById(int appointmentId);
-        public Task<int> SaveAttachment(Attach attach);
 
         // Patient CRUD
         public Patient? P_Update(Patient patient);
+        public Patient? P_GetByEmail(string? email);
 
-        public List<Doctor> GetDoctorsBySpecialization(string spName);
+        //  Doctor CRUD
+        public List<Doctor> D_GetAll();
+        public Doctor D_UpdateInfo(int doctorId, string name, string phone);
+        public Doctor D_GetById(int id);
+        public Doctor D_GetByEmail(string email);
+        public Doctor D_UpdatePhoto(Doctor doctor);
+        public Doctor D_Update(Doctor updatedDoctor);
+        public Doctor D_UpdateSpecialization(int doctorId, string specialization, string? message);
+        public Doctor D_UpdateClinic(int doctorId, string address, string region, string city);
+        public Doctor D_UpdateFees(int doctorId, int fees, string PriceNotes);
+        public Doctor D_UpdatePassword(int doctorId, string oldpassword, string newpassword);
+        public List<Doctor> D_GetBySpecialization(string spName);
+
+        //  Appointment CRUD
+        public Appointment CreateAppointment(int doctorId, int patientId, string patientMessage = null);
+        public Appointment UpdateDoctorMessage(int appointmentId, string? doctorMessage);
+        public Appointment UpdatePatientMessage(int appointmentId, string? patientMessage);
+        public Appointment GetAppointmentById(int appointmentId);
+        public List<Appointment> GetAppointmentsByDoctorId(int userId);
+        public List<Appointment> GetAppointmentsByPatientId(int userId);
+        public Task<int> SaveAttachment(Attach attach);
+
     }
 
     public class BusinessMethodsImpl : IBusinessMethods
@@ -101,9 +104,9 @@ namespace LibBiz.Data
 
             return newPatient;
         }
-        public List<Doctor> GetDoctorsBySpecialization(string spName)
+        public List<Doctor> D_GetBySpecialization(string spName)
         {
-            var allDoctors = GetAllDoctors();
+            var allDoctors = D_GetAll();
 
             var filteredDoctors = allDoctors.FindAll(doctor => doctor.SpecializationName == spName);
 
@@ -137,13 +140,13 @@ namespace LibBiz.Data
 
             return specializations;
         }
-        public List<Doctor> GetAllDoctors()
+        public List<Doctor> D_GetAll()
         {
             List<Doctor> doctors = _context.Doctors.ToList();
 
             return doctors;
         }
-        public Doctor GetDoctorById(int id)
+        public Doctor D_GetById(int id)
         {
             Doctor doctor = _context.Doctors.Find(id);
 
@@ -164,11 +167,11 @@ namespace LibBiz.Data
 
             return query;
         }
-        public Patient? GetPatientByEmail(string? email)
+        public Patient? P_GetByEmail(string? email)
         {
             return _context.Patients.Where(x => x.Email == email).FirstOrDefault();
         }
-        public Doctor GetDoctorByEmail(string email)
+        public Doctor D_GetByEmail(string email)
         {
             Doctor doctor = _context.Doctors.Include(d => d.Photograph).FirstOrDefault(d => d.Email == email);
             if (doctor == null)
@@ -178,7 +181,7 @@ namespace LibBiz.Data
 
             return doctor;
         }
-        public Doctor UpdateDoctor(Doctor updatedDoctor)
+        public Doctor D_Update(Doctor updatedDoctor)
         {
             var existingDoctor = _context.Doctors.Find(updatedDoctor.UserId);
             if (existingDoctor == null)
@@ -196,7 +199,7 @@ namespace LibBiz.Data
 
             return updatedDoctor;
         }
-        public Doctor UpdateDoctorInfo(int doctorId, string name, string phone)
+        public Doctor D_UpdateInfo(int doctorId, string name, string phone)
         {
             var existingDoctor = _context.Doctors.Find(doctorId);
             if (existingDoctor == null)
@@ -210,7 +213,7 @@ namespace LibBiz.Data
 
             return existingDoctor;
         }
-        public Doctor UpdateDoctorPhoto(Doctor doctor)
+        public Doctor D_UpdatePhoto(Doctor doctor)
         {
             var existingDoctor = _context.Doctors.Find(doctor.UserId);
             if (existingDoctor == null)
@@ -223,22 +226,6 @@ namespace LibBiz.Data
             _context.SaveChanges();
 
             return existingDoctor;
-        }
-        public Patient UpdatePatient(Patient updatedPatient)
-        {
-            var existingPatient = _context.Patients.Find(updatedPatient.UserId);
-            if (existingPatient == null)
-            {
-                throw new Exception("Paciente não encontrado");
-            }
-
-            existingPatient.Email = updatedPatient.Email;
-            existingPatient.Name = updatedPatient.Name;
-            existingPatient.Phone = updatedPatient.Phone;
-
-            _context.SaveChanges();
-
-            return updatedPatient;
         }
         public Appointment CreateAppointment(int doctorId, int patientId, string? patientMessage)
         {
@@ -270,7 +257,7 @@ namespace LibBiz.Data
 
             return appointment;
         }
-        public Doctor UpdateDoctorSpecialization(int doctorId, string specialization, string? s)
+        public Doctor D_UpdateSpecialization(int doctorId, string specialization, string? s)
         {
             var existingDoctor = _context.Doctors.Find(doctorId);
             if (existingDoctor == null)
@@ -284,7 +271,7 @@ namespace LibBiz.Data
 
             return existingDoctor;
         }
-        public Doctor UpdateDoctorClinic(int doctorId, string address, string region, string city)
+        public Doctor D_UpdateClinic(int doctorId, string address, string region, string city)
         {
             var existingDoctor = _context.Doctors.Find(doctorId);
             if (existingDoctor == null)
@@ -299,7 +286,7 @@ namespace LibBiz.Data
 
             return existingDoctor;
         }
-        public Doctor UpdateDoctorFees(int doctorId, int fees, string PriceNotes)
+        public Doctor D_UpdateFees(int doctorId, int fees, string PriceNotes)
         {
             var existingDoctor = _context.Doctors.Find(doctorId);
             if (existingDoctor == null)
@@ -313,7 +300,7 @@ namespace LibBiz.Data
 
             return existingDoctor;
         }
-        public Doctor UpdateDoctorPassword(int doctorId, string oldpassword, string newpassword)
+        public Doctor D_UpdatePassword(int doctorId, string oldpassword, string newpassword)
         {
             var existingDoctor = _context.Doctors.Find(doctorId);
             if (existingDoctor == null)

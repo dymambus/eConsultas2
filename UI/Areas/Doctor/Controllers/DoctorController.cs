@@ -47,7 +47,7 @@ namespace UI.Areas.Doctor.Controllers
                 var userEmail = HttpContext.Session.GetString("Email");
 
                 // Consulte o banco de dados para obter as consultas do médico com base no email
-                var doctor = _BM.GetDoctorByEmail(userEmail);
+                var doctor = _BM.D_GetByEmail(userEmail);
 
                 if (doctor != null)
                 {
@@ -111,7 +111,7 @@ namespace UI.Areas.Doctor.Controllers
                 var userEmail = HttpContext.Session.GetString("Email");
 
                 // Consulte o banco de dados para obter as informações do médico com base no email
-                var doctor = _BM.GetDoctorByEmail(userEmail);
+                var doctor = _BM.D_GetByEmail(userEmail);
 
                 if (doctor != null)
                 {
@@ -163,7 +163,7 @@ namespace UI.Areas.Doctor.Controllers
                 var userEmail = HttpContext.Session.GetString("Email");
 
                 // Consulte o banco de dados para obter as informações do médico com base no email
-                var doctor = _BM.GetDoctorByEmail(userEmail);
+                var doctor = _BM.D_GetByEmail(userEmail);
 
                 if (doctor != null)
                 {
@@ -204,7 +204,7 @@ namespace UI.Areas.Doctor.Controllers
                 var userEmail = HttpContext.Session.GetString("Email");
 
                 // Consulte o banco de dados para obter as informações do médico com base no email
-                var doctor = _BM.GetDoctorByEmail(userEmail);
+                var doctor = _BM.D_GetByEmail(userEmail);
 
                 if (doctor != null)
                 {
@@ -245,7 +245,7 @@ namespace UI.Areas.Doctor.Controllers
                 var userEmail = HttpContext.Session.GetString("Email");
 
                 // Consulte o banco de dados para obter as informações do médico com base no email
-                var doctor = _BM.GetDoctorByEmail(userEmail);
+                var doctor = _BM.D_GetByEmail(userEmail);
 
                 if (doctor != null)
                 {
@@ -280,7 +280,7 @@ namespace UI.Areas.Doctor.Controllers
                 return RedirectToAction("Login", "Auth");
             }
 
-            var doctor = _BM.GetDoctorByEmail(userEmail);
+            var doctor = _BM.D_GetByEmail(userEmail);
             var appointment = _BM.GetAppointmentById(appointmentId);
 
             if (doctor == null || appointment == null)
@@ -338,14 +338,14 @@ namespace UI.Areas.Doctor.Controllers
         [HttpGet]
         public IActionResult GetAllDoctors()
         {
-            List<LibBiz.Models.Doctor> doctors = _BM.GetAllDoctors();
+            List<LibBiz.Models.Doctor> doctors = _BM.D_GetAll();
             return Ok(doctors);
         }
 
         [HttpGet]
         public IActionResult GetDoctorById(int id)
         {
-            LibBiz.Models.Doctor doctor = _BM.GetDoctorById(id);
+            LibBiz.Models.Doctor doctor = _BM.D_GetById(id);
             return Ok(doctor);
         }
 
@@ -353,7 +353,7 @@ namespace UI.Areas.Doctor.Controllers
         public IActionResult UploadProfilePicture(int doctorId, IFormFile profilePicture)
         {
             // Recupere o médico do banco de dados com base no ID ou na sessão
-            var doctor = _BM.GetDoctorById(doctorId);
+            var doctor = _BM.D_GetById(doctorId);
 
             if (doctor != null && profilePicture != null && profilePicture.Length > 0)
             {
@@ -365,7 +365,7 @@ namespace UI.Areas.Doctor.Controllers
                         UserId = doctor.UserId,
                         ImageData = ms.ToArray()
                     };
-                    _BM.UpdateDoctorPhoto(doctor);
+                    _BM.D_UpdatePhoto(doctor);
                 }
                 // Atualize o médico no banco de dados para incluir a foto
 
@@ -378,7 +378,7 @@ namespace UI.Areas.Doctor.Controllers
         [HttpPost]
         public IActionResult UpdateDoctorInfo(int doctorId, string name, string phone)
         {
-            var doctor = _BM.UpdateDoctorInfo(doctorId, name, phone);
+            var doctor = _BM.D_UpdateInfo(doctorId, name, phone);
             return RedirectToAction("DoctorProfile");
 
         }
@@ -386,7 +386,7 @@ namespace UI.Areas.Doctor.Controllers
         [HttpPost]
         public IActionResult UpdateDoctorSpecialization(int doctorId, string specializationName, string SpecializationDescription)
         {
-            var doctor = _BM.UpdateDoctorSpecialization(doctorId, specializationName, SpecializationDescription);
+            var doctor = _BM.D_UpdateSpecialization(doctorId, specializationName, SpecializationDescription);
             return RedirectToAction("DoctorSpecialization");
 
         }
@@ -394,7 +394,7 @@ namespace UI.Areas.Doctor.Controllers
         [HttpPost]
         public IActionResult UpdateDoctorClinic(int doctorId, string address, string region, string city)
         {
-            var doctor = _BM.UpdateDoctorClinic(doctorId, address, region, city);
+            var doctor = _BM.D_UpdateClinic(doctorId, address, region, city);
             return RedirectToAction("DoctorClinic");
 
         }
@@ -402,7 +402,7 @@ namespace UI.Areas.Doctor.Controllers
         [HttpPost]
         public IActionResult UpdateDoctorFees(int doctorId, int price, string PriceNotes)
         {
-            var doctor = _BM.UpdateDoctorFees(doctorId, price, PriceNotes);
+            var doctor = _BM.D_UpdateFees(doctorId, price, PriceNotes);
             return RedirectToAction("DoctorFees");
 
         }
@@ -410,7 +410,7 @@ namespace UI.Areas.Doctor.Controllers
         [HttpPost]
         public IActionResult UpdateDoctorPassword(int doctorId, string password, string newpassword)
         {
-            var doctor = _BM.UpdateDoctorPassword(doctorId, password, newpassword);
+            var doctor = _BM.D_UpdatePassword(doctorId, password, newpassword);
             return RedirectToAction("DoctorProfile");
 
         }

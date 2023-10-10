@@ -58,7 +58,7 @@ namespace UI.Controllers
                 }
             }
             // Se as credenciais estiverem erradas ou o usuário não tem um papel válido
-            return Unauthorized(new { message = "Credenciais inválidas" });
+            return RedirectToAction("Register");
         }
 
         private bool VerifyPassword(User user, string password)
@@ -96,8 +96,6 @@ namespace UI.Controllers
 
             return RedirectToAction("Login", "Auth");
         }
-
-
 
         [HttpGet]
         public IActionResult Register()

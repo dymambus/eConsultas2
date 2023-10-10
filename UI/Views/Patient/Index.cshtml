@@ -1,6 +1,11 @@
 ﻿@model PatientConsultationViewModel
 
 
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
 @section CustomCSS{
     <link href="~/doctor/dashboard.css" rel="stylesheet" />
 }
@@ -13,71 +18,69 @@
 
 <partial name="_HeaderPatient" />
 
-<div class="container-fluid">
-    <div class="row">
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+<div class="container">
+    <main>
 
-            <h2>Bem vindo @Model.Patient.Name</h2>
+        <h2>Bem vindo @Model.Patient.Name</h2>
 
-            <h4>Your Appointments:</h4>
-            @if (Model != null)
-            {
-                <table class="table">
-                    <thead>
+        <h4>Your Appointments:</h4>
+        @if (Model != null)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Doctor Name</th>
+                        <th>Fees Paid</th>
+                        <th>Your Message</th>
+                        <th>Doctor Message</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var appointmentViewModel in Model.Appointments)
+                    {
                         <tr>
-                            <th>Status</th>
-                            <th>Date</th>
-                            <th>Doctor Name</th>
-                            <th>Fees Paid</th>
-                            <th>Your Message</th>
-                            <th>Doctor Message</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var appointmentViewModel in Model.Appointments)
-                        {
-                            <tr>
-                                <td>
-                                    @if (appointmentViewModel.IsDone)
-                                    {
-                                        <span class="badge badge-warning">&#10004;</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge badge-warning">Em Aberto</span>
-                                    }
-                                </td>
-                                <td>@appointmentViewModel.Date</td>
-                                <td>@appointmentViewModel.DoctorName</td>
-                                <td>@appointmentViewModel.FeesPaid</td>
-                                <td>@appointmentViewModel.PatientMessage</td>
-                                <td>@appointmentViewModel.DoctorMessage</td>
-                                <td>
-                                    @if (!appointmentViewModel.IsDone)
-                                    {
-                                        <a asp-controller="Patient" asp-action="PatientConsultation" asp-route-appointmentId="@appointmentViewModel.Id" asp-route-userEmail="@Model.Patient.Email" class="btn btn-primary">Consultar</a>
-                                        <form asp-asp-controller="Doctor" asp-action="CloseAppointment" method="post" enctype="multipart/form-data">
-                                            <input hidden name="appointmentId" value="@appointmentViewModel.Id" />
-                                        </form>
+                            <td>
+                                @if (appointmentViewModel.IsDone)
+                                {
+                                    <span class="badge badge-warning">&#10004;</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-warning">Em Aberto</span>
+                                }
+                            </td>
+                            <td>@appointmentViewModel.Date</td>
+                            <td>@appointmentViewModel.DoctorName</td>
+                            <td>@appointmentViewModel.FeesPaid</td>
+                            <td>@appointmentViewModel.PatientMessage</td>
+                            <td>@appointmentViewModel.DoctorMessage</td>
+                            <td>
+                                @if (!appointmentViewModel.IsDone)
+                                {
+                                    <a asp-controller="Patient" asp-action="PatientConsultation" asp-route-appointmentId="@appointmentViewModel.Id" asp-route-userEmail="@Model.Patient.Email" class="btn btn-primary">Consultar</a>
+                                    <form asp-asp-controller="Doctor" asp-action="CloseAppointment" method="post" enctype="multipart/form-data">
+                                        <input hidden name="appointmentId" value="@appointmentViewModel.Id" />
+                                    </form>
 
-                                    }
-                                    else
-                                    {
-                                        <a asp-controller="Patient" asp-action="PatientConsultation" asp-route-appointmentId="@appointmentViewModel.Id" asp-route-userEmail="@Model.Patient.Email" class="btn btn-primary">Consultar</a>
-                                    }
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
-            else
-            {
-                <p>You don't have any appointments yet.</p>
-            }
-        </main>
-    </div>
+                                }
+                                else
+                                {
+                                    <a asp-controller="Patient" asp-action="PatientConsultation" asp-route-appointmentId="@appointmentViewModel.Id" asp-route-userEmail="@Model.Patient.Email" class="btn btn-primary">Consultar</a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>You don't have any appointments yet.</p>
+        }
+    </main>
 </div>
 <partial name="_Footer" />
 

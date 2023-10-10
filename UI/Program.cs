@@ -21,9 +21,10 @@ var logger = new LoggerConfiguration()
     .CreateLogger();
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);
+
 builder.Services.Configure<FormOptions>(options =>
 {
-    options.MultipartBodyLengthLimit = long.MaxValue; // Defina um valor adequado
+    options.MultipartBodyLengthLimit = long.MaxValue;
 });
 
 builder.Services.AddControllersWithViews();
@@ -53,15 +54,6 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("CorsPolicy",
-        builder => builder.AllowAnyOrigin()
-        .AllowAnyMethod()
-        .AllowAnyHeader());
-});
-
-// Adicione a configuração da sessão
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(20);
@@ -75,7 +67,6 @@ if (!app.Environment.IsDevelopment())
 }
 app.UseStaticFiles();
 
-// Adicione o middleware de sessão
 app.UseSession();
 
 app.UseRouting();

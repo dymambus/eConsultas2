@@ -34,21 +34,21 @@ namespace WebApi.Controllers
         [HttpPost]
         public IActionResult UpdateDoctorInfo(Doctor updatedDoctor)
         {
-            Doctor doctor = _BM.UpdateDoctor(updatedDoctor);
+            Doctor doctor = _BM.D_Update(updatedDoctor);
             return Ok(doctor);
         }
 
         [HttpGet]
         public IActionResult GetAllDoctors()
         {
-            List<Doctor> doctors = _BM.GetAllDoctors();
+            List<Doctor> doctors = _BM.D_GetAll();
             return Ok(doctors);
         }
 
         [HttpGet]
         public IActionResult GetDoctorById(int id)
         {
-            Doctor doctor = _BM.GetDoctorById(id);
+            Doctor doctor = _BM.D_GetById(id);
             return Ok(doctor);
         }
         [HttpPut]

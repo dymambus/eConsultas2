@@ -28,7 +28,7 @@ namespace UI.Areas.Patient.Controllers
                 return null;
             }
 
-            var patient = _BM.GetPatientByEmail(HttpContext.Session.GetString("Email"));
+            var patient = _BM.P_GetByEmail(HttpContext.Session.GetString("Email"));
 
             if (patient != null)
             {
@@ -69,7 +69,7 @@ namespace UI.Areas.Patient.Controllers
                 var userEmail = HttpContext.Session.GetString("Email");
 
                 // Consulte o banco de dados para obter as consultas do médico com base no email
-                var patient = _BM.GetPatientByEmail(userEmail);
+                var patient = _BM.P_GetByEmail(userEmail);
 
                 if (patient != null)
                 {
@@ -160,7 +160,7 @@ namespace UI.Areas.Patient.Controllers
             else
             {
                 // Consulte o banco de dados para obter a lista de médicos
-                var doctors = _BM.GetAllDoctors();
+                var doctors = _BM.D_GetAll();
 
                 // Consulte o banco de dados para obter a lista de especializações
                 var specializations = _BM.GetAllSpecializations();
@@ -188,13 +188,13 @@ namespace UI.Areas.Patient.Controllers
             if (string.IsNullOrEmpty(model.SelectSpecialization) || model.SelectSpecialization == "Show All")
             {
                 // Carregar a lista completa de médicos sem aplicar filtros
-                var doctors = _BM.GetAllDoctors();
+                var doctors = _BM.D_GetAll();
                 model.Doctors = doctors;
             }
             else
             {
                 // Filtrar a lista de médicos com base na especialização selecionada
-                var filteredDoctors = _BM.GetDoctorsBySpecialization(model.SelectSpecialization);
+                var filteredDoctors = _BM.D_GetBySpecialization(model.SelectSpecialization);
                 model.Doctors = filteredDoctors;
             }
 
@@ -236,7 +236,7 @@ namespace UI.Areas.Patient.Controllers
             }
             else
             {
-                var patient = _BM.GetPatientByEmail(userEmail);
+                var patient = _BM.P_GetByEmail(userEmail);
                 var appointment = _BM.GetAppointmentById(appointmentId);
 
                 if (patient == null || appointment == null)
