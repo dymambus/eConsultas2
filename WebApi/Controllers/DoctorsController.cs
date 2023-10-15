@@ -54,7 +54,7 @@ namespace WebApi.Controllers
         [HttpPut]
         public IActionResult UpdatePatient(Patient updatedPatient)
         {
-            Patient patient = _BM.UpdatePatient(updatedPatient);
+            Patient patient = _BM.P_Update(updatedPatient);
             return Ok(patient);
         }
 
